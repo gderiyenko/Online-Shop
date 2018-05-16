@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Product;
+use App\ProductType;
+
 class HomeController extends Controller
 {
     /**
@@ -11,7 +14,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     /**
@@ -22,5 +25,11 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+    public function list()
+    {
+        $ProductRequest = Product::getAllWithTypes();
+        $ProductTypeRequest = ProductType::getAllTypes();
+        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"All"]);
     }
 }

@@ -1,5 +1,17 @@
 
-/*@import "navigation.css";*/
+/*@import "navigation.css";
 @import 'fullcalendar.bundle.css';
 @import 'style.bundle.css';
-@import 'vendors.bundle.css';
+@import 'vendors.bundle.css';*/
+@import 'styles/style.css';
+@import 'styles/components.css';
+@import 'styles/components.min.css';
+@import 'styles/components-md.css';
+@import 'styles/components-md.min.css';
+@import 'styles/components-rounded.css';
+@import 'styles/components-rounded.min.css';
+@import 'styles/login-2.min.css';
+@import 'styles/plugins.css';
+@import 'styles/plugins.min.css';
+@import 'styles/plugins-md.css';
+@import 'styles/plugins-md.min.css';
