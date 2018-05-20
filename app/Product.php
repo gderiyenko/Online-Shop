@@ -15,6 +15,10 @@ class Product extends Model
     	return \DB::select('SELECT p.*, pt.name as type_name  FROM products p, product_types pt WHERE p.type_id = pt.id AND ?', [1]);
     }
 
+    public static function getById($productId){
+    	return \DB::select('SELECT p.*, pt.name as type_name  FROM products p, product_types pt WHERE p.type_id = pt.id AND p.id = ?', [$productId]);
+    }
+
     public static function getByType($typeName){
     	return \DB::select('SELECT p.*, pt.name as type_name  FROM products p, product_types pt WHERE p.type_id = pt.id AND pt.name = ?', [$typeName]);
     }
