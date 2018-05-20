@@ -30,21 +30,17 @@ class HomeController extends Controller
     }
     public function userSessionStart()
     {
-        var_dump(session_status());
-        if (session_status() == PHP_SESSION_NONE) {
-            var_dump(session_status());
-            session_start();
+        //session_start();
+        if (!($_SESSION['basket']['count'] >= 0)) {
             $_SESSION['basket'] = array(
                 'count' => 0,
                 'products' => array(),
             );
         }
-        
     }
 
     public function list()
     {
-        //$this->userSessionStart();
         $ProductRequest = Product::getAllWithTypes();
         $ProductTypeRequest = ProductType::getAllTypes();
         return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"All"]);
@@ -56,18 +52,19 @@ class HomeController extends Controller
         $ProductTypeRequest = ProductType::getAllTypes();
         return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>$productTypeName]);
     }
+
     public function addOne()
     {
         $json = $_GET['data'];
         $productId = json_decode($json, true);
         $_SESSION['basket']['products'][++$_SESSION['basket']['count']] = $productId;
+        var_dump($_SESSION);
         return;
     }
+
     public function basket()
-    {
-        //$userId = \Auth::id();
-        //$this->userSessionStart();
-        //$QueryRequest = BookingQuery::getAllUserQueries($userId);
+    {   
+        $this->userSessionStart();
         $models = array();
         $summaryCostOfProducts = 0.00;
         foreach ($_SESSION['basket']['products'] as $key => $productId) {
@@ -83,4 +80,38 @@ class HomeController extends Controller
                     "sumCost"       => $summaryCostOfProducts
                 ]);
     }
+
+    public function deleteAllById(){
+        $userId = \Auth::id();
+        $json = $_GET['data'];
+        $productId = json_decode($json, true);
+        return Basket::deleteFromBasketInfo($userId, $productId);
+    }
+
+    public function deleteOne(){
+        $json = $_GET['data'];
+        $productId = json_decode($json, true);
+        foreach ($_SESSION['basket']['products'] as $key => $value) {
+            if ($value == $productId){
+                $value = 0;
+                break;
+            }
+        }
+        return;
+    }
+
+    public function delete()
+    {
+        $models = $_SESSION['basket'] = array(
+            'count' => 0,
+            'products' => array(),
+        );
+        return view('basket.list', 
+            [
+                "userProducts"  => $models, 
+                //"allQueries"    => $QueryRequest,
+                "sumCost"       => $summaryCostOfProducts
+            ]);
+    }
+
 }
