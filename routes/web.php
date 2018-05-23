@@ -1,5 +1,5 @@
 <?php
-use Illuminate\Support\Facades\Auth;
+
 use App\User;
 /*
 |--------------------------------------------------------------------------
@@ -16,19 +16,34 @@ use App\User;
 
 Auth::routes();
 
-//Route::get('/home', 'HomeController@list')->name('home');
 Route::get('/', 'HomeController@list');
 Route::get('/list', 'HomeController@list');
 Route::get('/list/{name?}', 'HomeController@listByType');
+
 Route::get('/basket-add-one', 'HomeController@addOne');
 Route::get('/basket', 'HomeController@basket');
 Route::get('/basket-delete-one', 'HomeController@deleteOne');
 Route::get('/basket-delete-all', 'HomeController@deleteAllById');
 Route::get('/basket-delete', 'HomeController@delete');
+
+Route::view('/404', 'error.404');
+
+
 Route::get('/home', function () {
-        if (Auth::id() == 1) { // if admin
-        	return redirect('/basket');
-        } else {
-			return redirect('/list');
-        }
+    if (Auth::id() == 1) { // if admin
+    	return redirect('/basket');
+    } else {
+		return redirect('/list');
+    }
 }); 
+
+Route::prefix('admin')->group(function () {
+
+    Route::get('users', function () {
+        // Matches The "/admin/users" URL
+        if (is_null(Auth::id())) {
+			return redirect('/404');
+	    }
+        var_dump(Auth::id());
+    });
+});

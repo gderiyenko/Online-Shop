@@ -27,9 +27,14 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public static function getRoleIdByUserId($userId)
+    public function getRoleIdByUserId($userId)
     {
         return \DB::select('SELECT role_id from users where users.id = ?', [$userId]);
+    }
+    public function admin($userId)
+    {
+        echo $this->getRoleIdByUserId($userId);
+        die();
     }
 
 }

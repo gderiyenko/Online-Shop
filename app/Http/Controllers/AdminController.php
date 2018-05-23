@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\ProductType;
 use App\Basket;
+use App\User;
 
-class HomeController extends Controller
+class AdminController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -15,8 +16,9 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        session_start();
-        //$this->middleware('auth');
+        $this->middleware('auth');
+        if (!User::admin(Auth::id()))
+            return view('error.404');
     }
 
     /**
