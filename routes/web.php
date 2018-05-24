@@ -12,12 +12,11 @@ use App\User;
 |
 */
 
-
-
 Auth::routes();
 
 Route::get('/', 'HomeController@list');
 Route::get('/list', 'HomeController@list');
+Route::get('/list/sale', 'HomeController@listSale');
 Route::get('/list/{name?}', 'HomeController@listByType');
 
 Route::get('/basket-add-one', 'HomeController@addOne');
@@ -27,7 +26,6 @@ Route::get('/basket-delete-all', 'HomeController@deleteAllById');
 Route::get('/basket-delete', 'HomeController@delete');
 
 Route::view('/404', 'error.404');
-
 
 Route::get('/home', function () {
     if (Auth::id() == 1) { // if admin

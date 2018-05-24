@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\ProductType;
 use App\Basket;
+use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
@@ -52,6 +53,13 @@ class HomeController extends Controller
         $ProductTypeRequest = ProductType::getAllTypes();
         return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>$productTypeName]);
     }
+    
+    public function listSale()
+    {
+        $ProductRequest = Product::getSales();
+        $ProductTypeRequest = ProductType::getAllTypes();
+        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"Sale"]);
+    }
 
     public function addOne()
     {
@@ -64,10 +72,11 @@ class HomeController extends Controller
 
     public function basket()
     {   
+        Session::put('count', 0);
         $this->userSessionStart();
         $models = array();
         $summaryCostOfProducts = 0.00;
-        foreach ($_SESSION['basket']['products'] as $key => $productId) {
+        foreach ($_SESSION['basket']['products'] as $key => $productId) if ($productId != 0){
             $summaryCostOfProducts += Product::getPriceById($productId);
             $models[$key] = Product::getById($productId)[0];
             $models[$key]->count = 1;
@@ -81,19 +90,25 @@ class HomeController extends Controller
                 ]);
     }
 
-    public function deleteAllById(){
-        $userId = \Auth::id();
-        $json = $_GET['data'];
-        $productId = json_decode($json, true);
-        return Basket::deleteFromBasketInfo($userId, $productId);
-    }
-
-    public function deleteOne(){
+    public function deleteAllById()
+    {
         $json = $_GET['data'];
         $productId = json_decode($json, true);
         foreach ($_SESSION['basket']['products'] as $key => $value) {
             if ($value == $productId){
                 $value = 0;
+            }
+        }
+        return;
+    }
+
+    public function deleteOne()
+    {
+        $json = $_GET['data'];
+        $productId = json_decode($json, true);
+        foreach ($_SESSION['basket']['products'] as $key => $value) { var_dump("1");
+            if ($value == $productId){
+                $_SESSION['basket']['products'][$key] = 0;
                 break;
             }
         }
