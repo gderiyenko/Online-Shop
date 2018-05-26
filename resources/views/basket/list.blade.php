@@ -3,11 +3,7 @@
 <script>
     function AddOne(productId) {
         $.get('/basket-add-one', {'data': productId}, function(response){ console.log(response); });
-        location.reload();
-    };
-    function DeleteOne(productId) {
-        $.get('/basket-delete-one', {'data': productId}, function(response){ console.log(response); });
-        location.reload();
+        window.location.reload();
     };
     function DeleteAll(productId) {
         $.get('/basket-delete-all', {'data': productId}, function(response){ console.log(response); });

@@ -2,7 +2,9 @@
 /*@import "navigation.css";
 @import 'fullcalendar.bundle.css';
 @import 'style.bundle.css';
-@import 'vendors.bundle.css';*/
+@import 'vendors.bundle.css';
+*/
+
 @import 'styles/style.css';
 @import 'styles/components.css';
 @import 'styles/components.min.css';
@@ -15,3 +17,4 @@
 @import 'styles/plugins.min.css';
 @import 'styles/plugins-md.css';
 @import 'styles/plugins-md.min.css';
+@import 'style.bundle.css';

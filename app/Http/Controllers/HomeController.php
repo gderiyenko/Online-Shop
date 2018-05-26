@@ -35,7 +35,10 @@ class HomeController extends Controller
         if (!isset($_SESSION['basket']['count'])) {
             $_SESSION['basket'] = array(
                 'count' => 0,
-                'products' => array(),
+                'products' => array(
+                    'id' => array(),
+                    'count' => array(),
+                ),
             );
         }
     }
@@ -65,29 +68,39 @@ class HomeController extends Controller
     {
         $json = $_GET['data'];
         $productId = json_decode($json, true);
-        $_SESSION['basket']['products'][++$_SESSION['basket']['count']] = $productId;
-        var_dump($_SESSION);
+
+        for ($key = 1; $key <= $_SESSION['basket']['count']; ++$key) {
+            if ($_SESSION['basket']['products']['id'][$key] == $productId) {
+                ++$_SESSION['basket']['products']['count'][$key];
+                return;
+            }
+        }
+
+        $_SESSION['basket']['products']['id'][++$_SESSION['basket']['count']] = $productId;
+        $_SESSION['basket']['products']['count'][$_SESSION['basket']['count']] = 1;
+        
         return;
     }
 
     public function basket()
     {   
-        Session::put('count', 0);
         $this->userSessionStart();
         $models = array();
         $summaryCostOfProducts = 0.00;
-        foreach ($_SESSION['basket']['products'] as $key => $productId) if ($productId != 0){
-            $summaryCostOfProducts += Product::getPriceById($productId);
-            $models[$key] = Product::getById($productId)[0];
-            $models[$key]->count = 1;
+
+        for ($key = 1; $key <= $_SESSION['basket']['count']; ++$key) {
+            if ($_SESSION['basket']['products']['count'][$key] > 0) {
+                $models[$key] = Product::getById($_SESSION['basket']['products']['id'][$key])[0];
+                $models[$key]->count = $_SESSION['basket']['products']['count'][$key];
+                $summaryCostOfProducts += $models[$key]->count*Product::getPriceById($_SESSION['basket']['products']['id'][$key]);
+            }
         }
         
-        return view('basket.list', 
-                [
-                    "userProducts"  => $models, 
-                    //"allQueries"    => $QueryRequest,
-                    "sumCost"       => $summaryCostOfProducts
-                ]);
+        return view('basket.list', [
+            "userProducts"  => $models, 
+            //"allQueries"    => $QueryRequest,
+            "sumCost"       => $summaryCostOfProducts
+        ]);
     }
 
     public function deleteAllById()
@@ -106,13 +119,14 @@ class HomeController extends Controller
     {
         $json = $_GET['data'];
         $productId = json_decode($json, true);
-        foreach ($_SESSION['basket']['products'] as $key => $value) { var_dump("1");
-            if ($value == $productId){
-                $_SESSION['basket']['products'][$key] = 0;
-                break;
+        //dd($productId); die();
+        for ($key = 1; $key <= $_SESSION['basket']['count']; ++$key) {
+            if ($_SESSION['basket']['products']['id'][$key] == $productId) {
+                $_SESSION['basket']['products']['count'][$key] = max($_SESSION['basket']['products']['count'][$key] - 1, 0);
+                return $this->basket();
             }
         }
-        return;
+        return view('error.404');
     }
 
     public function delete()

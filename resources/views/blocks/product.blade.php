@@ -1,6 +1,6 @@
 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
     <div class="portlet light portlet-fit bordered">
-        @if ($product->sale == 1)
+        @if (!is_null($product->sale_price))
                     <div class="mt-element-ribbon" style="position:absolute; width: 160px; right: 10px; ">
                         <div class="ribbon ribbon-vertical-right ribbon-color-warning uppercase ">
                             <i class="fa fa-star"></i>
@@ -12,7 +12,7 @@
                 <i class=" icon-layers font-green"></i>
                 <span class="caption-subject font-green bold uppercase">{{ $product->name }}</span>
                 <div class="caption-desc font-grey-cascade"><pre class="mt-code">@php
-                        if ($product->sale == 1)
+                        if (!is_null($product->sale_price))
                             echo number_format($product->sale_price, 2, '.', '');
                         else
                             echo number_format($product->price, 2, '.', '');

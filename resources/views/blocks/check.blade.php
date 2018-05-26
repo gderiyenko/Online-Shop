@@ -16,7 +16,7 @@
         @endphp </td>
     <td> 
         @php
-        if ($product->sale == 1){
+        if (!is_null($product->sale_price)){
             echo number_format($product->sale_price * $product->count, 2, '.', '');
         }
         else{
@@ -24,7 +24,7 @@
         }  
         @endphp </td>
     <td>
-        <a href="javascript:;" class="btn btn-outline btn-circle btn-sm purple" onclick="DeleteOne({{$product->id}})">
+        <a href="/basket-delete-one?data={{$product->id}}" class="btn btn-outline btn-circle btn-sm purple">
             <i class="fa fa-edit"></i> Delete </a>
         <a href="javascript:;" class="btn btn-circle btn-default btn-sm" onclick ="AddOne({{$product->id}})">
             <i class="fa fa-plus"></i> Add </a>

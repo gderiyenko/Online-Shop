@@ -13,20 +13,35 @@ class Product extends Model
 
 	public static function getAllWithTypes()
 	{
-		return \DB::select('SELECT p.*, pt.name as type_name  FROM products p, product_types pt WHERE p.type_id = pt.id AND ?', [1]);
+		return \DB::select(
+			'SELECT p.*, pt.name as type_name, s.price as sale_price
+			FROM products p
+			JOIN product_types pt on p.type_id = pt.id
+			LEFT JOIN sales s on (s.product_id = p.id AND (NOW() BETWEEN s.date_from AND s.date_to))');
 	}
 
 	public static function getById($productId)
 	{
-		return \DB::select('SELECT p.*, pt.name as type_name  FROM products p, product_types pt WHERE p.type_id = pt.id AND p.id = ?', [$productId]);
+		return \DB::select(
+			'SELECT p.*, pt.name as type_name, s.price as sale_price
+			FROM products p
+			JOIN product_types pt on p.type_id = pt.id
+			LEFT JOIN sales s on (s.product_id = p.id AND (NOW() BETWEEN s.date_from AND s.date_to))
+			WHERE p.id = ?', [$productId]);
 	}
 
 	public static function getByType($typeName)
 	{
-		return \DB::select('SELECT p.*, pt.name as type_name  FROM products p, product_types pt WHERE p.type_id = pt.id AND pt.name = ?', [$typeName]);
+		return \DB::select(
+			'SELECT p.*, pt.name as type_name, s.price as sale_price
+			FROM products p
+			JOIN product_types pt on p.type_id = pt.id
+			LEFT JOIN sales s on (s.product_id = p.id AND (NOW() BETWEEN s.date_from AND s.date_to))
+			WHERE p.type_id = pt.id AND pt.name = ?', [$typeName]);
 	}
 
-	public static function getSales() {
+	public static function getSales() 
+	{
 		return \DB::select(
 			'SELECT 
 			s.price as sale_price,
@@ -78,8 +93,13 @@ class Product extends Model
 	
 	public static function getPriceById($x)
 	{
-		$priceInfo = \DB::select('SELECT p.price, p.sale, p.sale_price FROM products p WHERE p.id = ?', [$x]);
-		if ($priceInfo[0]->sale == 0)
+		$priceInfo = \DB::select(
+			'SELECT p.price, s.price sale_price
+			FROM products p 
+			LEFT JOIN sales s on (s.product_id = p.id AND (NOW() BETWEEN s.date_from AND s.date_to))
+			WHERE p.id = ?', [$x]
+		);
+		if ($priceInfo[0]->sale_price == 0)
 			return $priceInfo[0]->price;
 		else 
 			return $priceInfo[0]->sale_price;
