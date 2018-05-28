@@ -10,13 +10,12 @@
         location.reload();
     };
     function DeleteBasket(TemplateName) {
-        $.get('/basket-delete', {'data': TemplateName}, function(response){ console.log(response); });
+        $.get('/basket-delete', {}, function(response){ console.log(response); });
         location.reload();
     };
 
-    function BuyBasket(TemplateName) {
-        $.get('/basket-buy', {'data': TemplateName}, function(response){ console.log(response); });
-        location.reload();
+    function BuyBasket() {
+        window.location.replace('/basket-buy');
     };
 </script>
 @extends('layouts.app')

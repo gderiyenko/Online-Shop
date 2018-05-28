@@ -25,6 +25,11 @@ Route::get('/basket', 'HomeController@basket');
 Route::get('/basket-delete-one', 'HomeController@deleteOne');
 Route::get('/basket-delete-all', 'HomeController@deleteAllById');
 Route::get('/basket-delete', 'HomeController@delete');
+Route::get('/basket-buy', 'HomeController@store');
+
+Route::get('/find-region', 'HomeController@findRegion');
+Route::get('/find-city', 'HomeController@findCity');
+
 
 Route::view('/404', 'error.404');
 

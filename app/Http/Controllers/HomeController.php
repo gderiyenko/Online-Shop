@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\ProductType;
 use App\Basket;
+use App\Region;
 use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
@@ -95,6 +96,34 @@ class HomeController extends Controller
         ]);
     }
 
+    public function store() {
+        if (\Auth::check()) {
+            // The user is logged in...
+            $userId = \Auth::id();
+            $contactInfo = User::getContactInfoById($userId);
+        } else {
+            $contactInfo = null;
+        }
+
+        $summaryCostOfProducts = 0.00;
+        for ($key = 1; $key <= $_SESSION['basket']['count']; ++$key) {
+            if ($_SESSION['basket']['products']['count'][$key] > 0) {
+                $models[$key] = Product::getById($_SESSION['basket']['products']['id'][$key])[0];
+                $models[$key]->count = $_SESSION['basket']['products']['count'][$key];
+                $summaryCostOfProducts += $models[$key]->count*Product::getPriceById($_SESSION['basket']['products']['id'][$key]);
+            }
+        }
+        if ($summaryCostOfProducts == 0.00)
+            return $this->basket();
+
+        return view('basket.make_order', [
+            "userProducts"  => $models, 
+            "contactInfo"    => $contactInfo,
+            "sumCost"       => $summaryCostOfProducts
+        ]);
+
+    }
+
     // functions for session basket
     public function addOne()
     {
@@ -155,6 +184,33 @@ class HomeController extends Controller
                 //"allQueries"    => $QueryRequest,
                 "sumCost"       => $summaryCostOfProducts
             ]);
+    }
+
+    // country-region-city
+    public function findRegion()
+    {
+        $country = intval($_GET['country']);
+        $result = Region::findRegionByCountry($country);
+
+        echo '<select name="state" class="form-control" onchange="getCity(this.value)" style="height: 34px">';
+        echo "<option>Select State</option>";
+        foreach ($result as $key => $value)  { 
+            echo "<option value=" . $result[$key]->id . ">" . $result[$key]->name . "</option>";
+        } 
+        echo "</select>";
+    }
+
+    public function findCity()
+    {
+        $region = intval($_GET['region']);
+        $result = Region::findCityByRegion($region);
+
+        echo '<select name="city" class="form-control" style="height: 34px">';
+        echo '<option>Select City</option>';
+        foreach ($result as $key => $value)  { 
+            echo "<option value=" . $result[$key]->id . ">" . $result[$key]->name . "</option>";
+        } 
+        echo "</select>";
     }
 
 }
