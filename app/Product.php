@@ -61,7 +61,13 @@ class Product extends Model
 
 	public static function getByFind($findName)
 	{
-		return \DB::select('SELECT	p.*, pt.name AS type_name FROM	products p,	product_types pt WHERE	p.type_id = pt.id AND MATCH (p.name, p.description) AGAINST (?);', [$findName]);
+		return \DB::select(
+			'SELECT p.*, pt.name as type_name, s.price as sale_price
+			FROM products p
+			JOIN product_types pt on p.type_id = pt.id
+			LEFT JOIN sales s on (s.product_id = p.id AND (NOW() BETWEEN s.date_from AND s.date_to))
+			WHERE MATCH (p.name, p.description) AGAINST (?);', [$findName]
+		);
 	}
 
 	public static function getByTemplate($templateId)

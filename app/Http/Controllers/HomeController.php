@@ -29,6 +29,7 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
     public function userSessionStart()
     {
         //session_start();
@@ -42,7 +43,7 @@ class HomeController extends Controller
             );
         }
     }
-
+    // lists
     public function list()
     {
         $ProductRequest = Product::getAllWithTypes();
@@ -64,24 +65,15 @@ class HomeController extends Controller
         return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"Sale"]);
     }
 
-    public function addOne()
+    public function listByFind()
     {
-        $json = $_GET['data'];
-        $productId = json_decode($json, true);
-
-        for ($key = 1; $key <= $_SESSION['basket']['count']; ++$key) {
-            if ($_SESSION['basket']['products']['id'][$key] == $productId) {
-                ++$_SESSION['basket']['products']['count'][$key];
-                return;
-            }
-        }
-
-        $_SESSION['basket']['products']['id'][++$_SESSION['basket']['count']] = $productId;
-        $_SESSION['basket']['products']['count'][$_SESSION['basket']['count']] = 1;
-        
-        return;
+        $findQuery = htmlspecialchars($_GET['findQuery']);
+        $ProductRequest = Product::getByFind('*' . $findQuery . '*');
+        $ProductTypeRequest = ProductType::getAllTypes();
+        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"Find"]);
     }
 
+    //basket page
     public function basket()
     {   
         $this->userSessionStart();
@@ -101,6 +93,25 @@ class HomeController extends Controller
             //"allQueries"    => $QueryRequest,
             "sumCost"       => $summaryCostOfProducts
         ]);
+    }
+
+    // functions for session basket
+    public function addOne()
+    {
+        $json = $_GET['data'];
+        $productId = json_decode($json, true);
+
+        for ($key = 1; $key <= $_SESSION['basket']['count']; ++$key) {
+            if ($_SESSION['basket']['products']['id'][$key] == $productId) {
+                ++$_SESSION['basket']['products']['count'][$key];
+                return;
+            }
+        }
+
+        $_SESSION['basket']['products']['id'][++$_SESSION['basket']['count']] = $productId;
+        $_SESSION['basket']['products']['count'][$_SESSION['basket']['count']] = 1;
+        
+        return;
     }
 
     public function deleteAllById()
@@ -133,7 +144,10 @@ class HomeController extends Controller
     {
         $models = $_SESSION['basket'] = array(
             'count' => 0,
-            'products' => array(),
+            'products' => array(
+                'id' => array(),
+                'count' => array(),
+            ),
         );
         return view('basket.list', 
             [

@@ -18,6 +18,7 @@ Route::get('/', 'HomeController@list');
 Route::get('/list', 'HomeController@list');
 Route::get('/list/sale', 'HomeController@listSale');
 Route::get('/list/{name?}', 'HomeController@listByType');
+Route::get('/list-find', 'HomeController@listByFind');
 
 Route::get('/basket-add-one', 'HomeController@addOne');
 Route::get('/basket', 'HomeController@basket');
