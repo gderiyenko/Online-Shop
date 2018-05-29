@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\ProductType;
 use App\Basket;
+use App\User;
+use App\Addresses;
 use App\Region;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 class HomeController extends Controller
 {
@@ -97,13 +101,6 @@ class HomeController extends Controller
     }
 
     public function store() {
-        if (\Auth::check()) {
-            // The user is logged in...
-            $userId = \Auth::id();
-            $contactInfo = User::getContactInfoById($userId);
-        } else {
-            $contactInfo = null;
-        }
 
         $summaryCostOfProducts = 0.00;
         for ($key = 1; $key <= $_SESSION['basket']['count']; ++$key) {
@@ -118,9 +115,32 @@ class HomeController extends Controller
 
         return view('basket.make_order', [
             "userProducts"  => $models, 
-            "contactInfo"    => $contactInfo,
             "sumCost"       => $summaryCostOfProducts
         ]);
+
+    }
+
+    public function makeOrder() {
+        
+        $products = json_decode($_POST['products']);
+        if (\Auth::check()){
+            $userId = \Auth::id();
+        } else {
+            if(Validator::make($_POST, [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'phone' => 'required|regex:/(380)[0-9]{9}/',
+            ])) {
+                $userId = User::insertNonRegisterUser($_POST['name'], $_POST['email'], $_POST['phone']);
+            } else {
+                return Redirect::back()->withErrors(['msg', 'Validation contact form error']);
+            } 
+        }
+        
+        Addresses::insert($userId, $_POST['country'], $_POST['region'], $_POST['city'], $_POST['postcode']);
+        /*foreach ($products as $key => $value) {
+            $value->id
+        }*/
 
     }
 
@@ -192,7 +212,7 @@ class HomeController extends Controller
         $country = intval($_GET['country']);
         $result = Region::findRegionByCountry($country);
 
-        echo '<select name="state" class="form-control" onchange="getCity(this.value)" style="height: 34px">';
+        echo '<select name="region" class="form-control" onchange="getCity(this.value)" style="height: 34px">';
         echo "<option>Select State</option>";
         foreach ($result as $key => $value)  { 
             echo "<option value=" . $result[$key]->id . ">" . $result[$key]->name . "</option>";

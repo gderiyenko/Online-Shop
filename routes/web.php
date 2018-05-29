@@ -27,6 +27,9 @@ Route::get('/basket-delete-all', 'HomeController@deleteAllById');
 Route::get('/basket-delete', 'HomeController@delete');
 Route::get('/basket-buy', 'HomeController@store');
 
+Route::post('/make-order-request', 'HomeController@makeOrder');
+
+
 Route::get('/find-region', 'HomeController@findRegion');
 Route::get('/find-city', 'HomeController@findCity');
 
@@ -50,4 +53,5 @@ Route::prefix('admin')->group(function () {
 	    }
         var_dump(Auth::id());
     });
+
 });

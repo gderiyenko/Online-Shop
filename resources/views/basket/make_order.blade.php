@@ -131,8 +131,8 @@
     <div class="col-md-6">
         <form method="post" action="/make-order-request" name="form1">
             {{ csrf_field() }}
+            <input type="hidden" name="products" value="{{json_encode($userProducts)}}">
             <h2>Where to deliver?</h2>
-
             <div class="form-group">
                 <select name="country" class="form-control" onChange="getState(this.value)" style="height: 34px">
                     <option>Select Country</option>
@@ -140,7 +140,7 @@
                 </select>
             </div>
             <div id="statediv" class="form-group">
-                <select name="state" class="form-control" style="height: 34px">
+                <select name="region" class="form-control" style="height: 34px">
                     <option>Select State</option>
                 </select>
             </div>
