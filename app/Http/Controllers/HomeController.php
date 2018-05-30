@@ -6,8 +6,10 @@ use App\Product;
 use App\ProductType;
 use App\Basket;
 use App\User;
-use App\Addresses;
+use App\Address;
+use App\Order;
 use App\Region;
+use App\BasketInfo;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
@@ -120,9 +122,26 @@ class HomeController extends Controller
 
     }
 
+    public static function sendEmail($email, $price, $pass)
+    {
+        $date = new \DateTime();
+        Mail::send('emails.order', 
+            [
+                'order_time'=>$date->format('Y-m-d H:i:s'), 
+                'cost'=>$price,
+                'password' => $pass
+            ],  
+            function ($message) use ($email) {
+                $message->from('us@example.com', 'Laravel');
+                $message->to($email);
+        });
+
+        return view('Payment.ThankYou');
+    }
+
     public function makeOrder() {
         
-        $products = json_decode($_POST['products']);
+        
         if (\Auth::check()){
             $userId = \Auth::id();
         } else {
@@ -136,11 +155,14 @@ class HomeController extends Controller
                 return Redirect::back()->withErrors(['msg', 'Validation contact form error']);
             } 
         }
-        
-        Addresses::insert($userId, $_POST['country'], $_POST['region'], $_POST['city'], $_POST['postcode']);
-        /*foreach ($products as $key => $value) {
-            $value->id
-        }*/
+        $date = new \DateTime();
+        $addressId = Address::insert($userId, $_POST['country'], $_POST['region'], $_POST['city'], $_POST['postcode'], $date->format('Y-m-d H:i:s'));
+        $orderId = Order::insert($userId, $addressId, 1, $date->format('Y-m-d H:i:s'));
+        $products = json_decode($_POST['products']);
+        foreach ($products as $key => $product) {
+            BasketInfo::insert($orderId, $product->id, $product->count, Product::getPriceById($product->id));
+        }
+        //$this->sendEmail($_POST['email'], )
 
     }
 

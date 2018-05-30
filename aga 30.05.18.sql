@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50722
 File Encoding         : 65001
 
-Date: 2018-05-28 05:03:32
+Date: 2018-05-30 04:50:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -25,15 +25,15 @@ CREATE TABLE `addresses` (
   `country_id` int(11) NOT NULL,
   `region_id` int(11) NOT NULL,
   `city_id` int(11) NOT NULL,
-  `
-postcode` varchar(20) NOT NULL,
+  `postcode` varchar(255) NOT NULL,
   `created_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of addresses
 -- ----------------------------
+INSERT INTO `addresses` VALUES ('16', '39', '62', '283', '3992', '2344', '2018-05-30 01:49:33');
 
 -- ----------------------------
 -- Table structure for baskets_info
@@ -51,6 +51,8 @@ CREATE TABLE `baskets_info` (
 -- ----------------------------
 -- Records of baskets_info
 -- ----------------------------
+INSERT INTO `baskets_info` VALUES ('3', '1', '2', '5.00');
+INSERT INTO `baskets_info` VALUES ('3', '2', '1', '15.80');
 
 -- ----------------------------
 -- Table structure for baskets_statuses
@@ -155,19 +157,20 @@ CREATE TABLE `orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `address_id` int(11) NOT NULL,
-  `sending_id` int(11) NOT NULL,
-  `status_id` datetime NOT NULL,
+  `consignment_number` varchar(50) DEFAULT NULL,
+  `status_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  `deleted_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `orders_fk0` (`address_id`),
   CONSTRAINT `orders_fk0` FOREIGN KEY (`address_id`) REFERENCES `addresses` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
+INSERT INTO `orders` VALUES ('3', '39', '16', null, '1', '2018-05-30 01:49:33', null, null);
 
 -- ----------------------------
 -- Table structure for password_resets
@@ -251,7 +254,7 @@ CREATE TABLE `roles` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `roles_name_unique` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of roles
@@ -259,6 +262,7 @@ CREATE TABLE `roles` (
 INSERT INTO `roles` VALUES ('1', 'admin', 'Administrator', '2017-08-07 08:03:41', '2017-08-07 08:03:41');
 INSERT INTO `roles` VALUES ('2', 'user', 'Normal User', '2017-08-07 08:03:41', '2017-08-07 08:03:41');
 INSERT INTO `roles` VALUES ('3', 'ShopAdmin', 'Shop Admin', '2017-08-14 09:23:40', '2017-08-14 09:24:52');
+INSERT INTO `roles` VALUES ('4', 'non-Register', 'username', '2018-05-30 00:45:55', '2018-05-30 00:45:57');
 
 -- ----------------------------
 -- Table structure for sales
@@ -300,7 +304,7 @@ CREATE TABLE `sessions` (
 -- ----------------------------
 -- Records of sessions
 -- ----------------------------
-INSERT INTO `sessions` VALUES ('QExxxt9TpuBz3cncmkHWPGqUJ8EZgppoNs5zUKj8', null, '10.0.2.2', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZGhQU3A1ZUZlckNjUHNKYUdmbTdkZ1BvNml2YTd4bHU2VkJ4dmlkRSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly9zaG9wLmxvYy9iYXNrZXQtZGVsZXRlLW9uZT9kYXRhPTUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', '1527472047');
+INSERT INTO `sessions` VALUES ('yHaKJ5uzqEpCltmX7Hblm4JptwiT2Mj9Ak61TSTR', null, '10.0.2.2', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiaDF4OHpSbWdFNllyWjFldHhYNW9wNE5kSHluQzh3RGdFcmYxWjZ6NSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzY6Imh0dHA6Ly9zaG9wLmxvYy9maW5kLWNpdHk/cmVnaW9uPTI4MyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', '1527644973');
 
 -- ----------------------------
 -- Table structure for statuses_log
@@ -356,18 +360,17 @@ CREATE TABLE `users` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', '1', 'Admin', 'admin@admin.com', '', 'users/default.png', '$2y$10$S4iitEfHxIm6dUX0GQ4oA.U13xBnOI4fY8kPd5xq4cWsaOYM4mKQe', 'zGeZhyzI0E10sMjIGCChj8PzPURtNrBPag2MmseeuTuJKcMQtYTJFMdYiKcq', '2017-08-07 08:03:41', '2018-05-16 14:08:40');
-INSERT INTO `users` VALUES ('2', '2', 'Gleb', 'gleb.deriyenko@gmail.com', '', 'users/default.png', '$2y$10$S4iitEfHxIm6dUX0GQ4oA.U13xBnOI4fY8kPd5xq4cWsaOYM4mKQe', 'MViF8svmCSvmZ6vNQrjg0xr0zGSBBV1qWwT7o7Y1RPQJuP3ifUH3Ssu9DikN', '2017-08-07 14:24:14', '2017-08-07 14:46:18');
+INSERT INTO `users` VALUES ('1', '1', 'Admin', 'admin@admin.com', '', 'users/default.png', '$2y$10$S4iitEfHxIm6dUX0GQ4oA.U13xBnOI4fY8kPd5xq4cWsaOYM4mKQe', 'hkE3P04X21oDExW8SafP2myVsA8pC71WYLkNEs5aM5KhnGOXi2ziWoi6pIis', '2017-08-07 08:03:41', '2018-05-16 14:08:40');
 INSERT INTO `users` VALUES ('3', '3', 'Marketopt', 'marketopt@admin.com', '', 'users/default.png', '$2y$10$BUd6MidBLGeh7NxO9t2jiOUU.JsJ2kd3dRuj8ivG/kiYSDV4Qe3qW', null, '2017-08-14 09:19:47', '2017-08-14 09:25:14');
 INSERT INTO `users` VALUES ('4', '2', 'bogdan', 'dydka@mail.com', '', 'users/default.png', '$2y$10$r9lpfhcxMSV.KIbzY86g8eDtIs4idhyahypBSXhVXFbMS6FNn2ClW', null, '2017-11-28 10:16:29', '2017-11-28 10:16:29');
 INSERT INTO `users` VALUES ('5', '2', 'Karina', 'karina@gmail.com', '', 'users/default.png', '$2y$10$A0njqOymkYPv.MSIDBUYpuslrlBHTFAPFP9npEp0jOANUUnwkuyM.', null, '2017-12-09 07:42:08', '2017-12-09 07:42:08');
-INSERT INTO `users` VALUES ('6', null, 'Tester', 'tester@mail.com', '', null, '$2y$10$9qjJpeL8ybPf60VBuxKdB.gatWcdlrxF0AIWWcBhiKtbU5qNrOkEu', 'L8i4jznXBvR1HgQg9LEOFzSjLHWTPAfG6SZ2CiP2lozWoL46En1RaJfvFf3Z', '2018-05-27 22:56:10', '2018-05-27 22:56:10');
-INSERT INTO `users` VALUES ('7', null, 'Test', 'test@mail.com', '380972450916', null, '$2y$10$ZF2kVa7CQoDeaFqzJuh50.pqw5qBpQYvqSWoczLZIN4dJ/jkbYhZ6', null, '2018-05-27 22:58:53', '2018-05-27 22:58:53');
+INSERT INTO `users` VALUES ('23', '4', 'Rec', 'n@mail.com', '380972450913', null, '$2y$10$nZ6fP2BoXg1cxkJ7pyrL7u079NQpkku6izkbY5ye6C2MWgCclQv3O', null, '2018-05-29 22:40:58', '2018-05-29 22:40:58');
+INSERT INTO `users` VALUES ('39', '4', 'Hlib', 'gleb.deriyenko@gmail.com', '380972450916', 'users/default.png', '$2y$10$KJDEg7ECo83FAYYehwOkg.e4h5kSq/lYFuzy7fHpdMh4gnuCb46cu', null, '2018-05-30 01:49:33', '2018-05-30 01:49:33');
 
 -- ----------------------------
 -- Table structure for vd_city
@@ -375,8 +378,8 @@ INSERT INTO `users` VALUES ('7', null, 'Test', 'test@mail.com', '380972450916', 
 DROP TABLE IF EXISTS `vd_city`;
 CREATE TABLE `vd_city` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `db_rootid` int(11) NOT NULL DEFAULT '0',
-  `db_defnamelang` varchar(100) NOT NULL,
+  `region_id` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(100) NOT NULL,
   `db_sortindex` int(10) NOT NULL DEFAULT '0',
   `db_timecreation` int(10) unsigned NOT NULL DEFAULT '0',
   `db_timelastedit` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1126,10 +1129,10 @@ INSERT INTO `vd_city` VALUES ('4545', '303', 'Черновцы', '0', '137413421
 -- ----------------------------
 DROP TABLE IF EXISTS `vd_city_lang`;
 CREATE TABLE `vd_city_lang` (
-  `db_rid` int(10) unsigned NOT NULL,
-  `db_lang` varchar(20) NOT NULL,
-  `db_namelang` varchar(100) NOT NULL,
-  PRIMARY KEY (`db_rid`,`db_lang`)
+  `id` int(10) unsigned NOT NULL,
+  `lang` varchar(20) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`,`lang`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -3313,8 +3316,8 @@ INSERT INTO `vd_city_lang` VALUES ('4537', 'en', 'Zastavna');
 DROP TABLE IF EXISTS `vd_region`;
 CREATE TABLE `vd_region` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `db_rootid` int(11) NOT NULL DEFAULT '0',
-  `db_defnamelang` varchar(100) NOT NULL,
+  `country_id` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(100) NOT NULL,
   `db_sortindex` int(10) NOT NULL DEFAULT '0',
   `db_timecreation` int(10) unsigned NOT NULL DEFAULT '0',
   `db_timelastedit` int(10) unsigned NOT NULL DEFAULT '0',
@@ -3357,10 +3360,10 @@ INSERT INTO `vd_region` VALUES ('303', '62', 'Черновицкая обл.', '
 -- ----------------------------
 DROP TABLE IF EXISTS `vd_region_lang`;
 CREATE TABLE `vd_region_lang` (
-  `db_rid` int(10) unsigned NOT NULL,
-  `db_lang` varchar(20) NOT NULL,
-  `db_namelang` varchar(100) NOT NULL,
-  PRIMARY KEY (`db_rid`,`db_lang`)
+  `id` int(10) unsigned NOT NULL,
+  `lang` varchar(20) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`,`lang`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
