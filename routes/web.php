@@ -51,7 +51,7 @@ Route::prefix('admin')->group(function () {
         if (is_null(Auth::id())) {
 			return redirect('/404');
 	    }
-        var_dump(Auth::id());
+        return view('admin.app');
     });
 
 });

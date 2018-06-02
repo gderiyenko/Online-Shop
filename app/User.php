@@ -38,6 +38,13 @@ class User extends Authenticatable
         echo $this->getRoleIdByUserId($userId);
         die();
     }
+    public static function getEmailById($userId)
+    {
+        return \DB::select(
+            'SELECT email
+            FROM users
+            WHERE id = ?', [$userId]);
+    }
     public static function getContactInfoById($userId)
     {
         return \DB::select(
@@ -47,30 +54,18 @@ class User extends Authenticatable
             Order by addresses.created_at DESC
             LIMIT 1 ', [$userId]);
     }
-    public static function insertNonRegisterUser($name, $email, $phone)
+    public static function insertNonRegisterUser($name, $email, $phone, $hashedPass, $date)
     {
-        //generate random pass
-        $length = 8;
-        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        $count = mb_strlen($chars);
-
-        for ($i = 0, $result = ''; $i < $length; $i++) {
-            $index = rand(0, $count - 1);
-            $result .= mb_substr($chars, $index, 1);
-        }
-
-        $pass = $result;
         // make a new non register user  
-        $date = new DateTime();
         return \DB::table('users')->insertGetId(array(
             'name' => $name,
             'email' => $email,
             'phone_number' => $phone,
-            'password' => Hash::make($pass),
+            'password' => $hashedPass,
             'role_id' => 4,
             'avatar' => 'users/default.png',
-            'created_at' => $date->format('Y-m-d H:i:s'),
-            'updated_at' => $date->format('Y-m-d H:i:s')
+            'created_at' => $date,
+            'updated_at' => $date
         ));
     }
 
