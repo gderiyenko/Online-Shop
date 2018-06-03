@@ -1,6 +1,7 @@
 <?php
 
 use App\User;
+use App\Http\Middleware\Role;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,24 +15,24 @@ use App\User;
 
 Auth::routes();
 
-Route::get('/', 'HomeController@list');
-Route::get('/list', 'HomeController@list');
-Route::get('/list/sale', 'HomeController@listSale');
-Route::get('/list/{name?}', 'HomeController@listByType');
-Route::get('/list-find', 'HomeController@listByFind');
+Route::get('/', 'ListController@list');
+Route::get('/list', 'ListController@list');
+Route::get('/list/sale', 'ListController@listSale');
+Route::get('/list/{name?}', 'ListController@listByType');
+Route::get('/list-find', 'ListController@listByFind');
 
-Route::get('/basket-add-one', 'HomeController@addOne');
-Route::get('/basket', 'HomeController@basket');
-Route::get('/basket-delete-one', 'HomeController@deleteOne');
-Route::get('/basket-delete-all', 'HomeController@deleteAllById');
-Route::get('/basket-delete', 'HomeController@delete');
-Route::get('/basket-buy', 'HomeController@store');
+Route::get('/basket-add-one', 'BasketController@addOne');
+Route::get('/basket', 'BasketController@basket');
+Route::get('/basket-delete-one', 'BasketController@deleteOne');
+Route::get('/basket-delete-all', 'BasketController@deleteAllById');
+Route::get('/basket-delete', 'BasketController@delete');
+Route::get('/basket-buy', 'BasketController@store');
 
-Route::post('/make-order-request', 'HomeController@makeOrder');
+Route::post('/make-order-request', 'BasketController@makeOrder');
 
 
-Route::get('/find-region', 'HomeController@findRegion');
-Route::get('/find-city', 'HomeController@findCity');
+Route::get('/find-region', 'LocationController@findRegion');
+Route::get('/find-city', 'LocationController@findCity');
 
 
 Route::view('/404', 'error.404');
@@ -45,7 +46,7 @@ Route::get('/home', function () {
 }); 
 
 Route::prefix('admin')->group(function () {
-    Route::get('users', 'HomeController@adminUsers');
-    Route::get('edit-user', 'HomeController@editUser');
-    Route::post('submit-edit-user', 'HomeController@submitEditUser');
+    Route::get('users', 'AdminController@adminUsers')->middleware('role');
+    Route::get('edit-user', 'AdminController@editUser')->middleware('role');
+    Route::post('submit-edit-user', 'AdminController@submitEditUser')->middleware('role');
 });

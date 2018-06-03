@@ -2,118 +2,77 @@
 
 namespace App\Http\Controllers;
 
+use Hash;
+use Mail;
+use Auth;
 use App\Product;
 use App\ProductType;
 use App\Basket;
 use App\User;
+use App\Role;
+use App\Address;
+use App\Order;
+use App\Region;
+use App\BasketInfo;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 class AdminController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('auth');
-        if (!User::admin(Auth::id()))
-            return view('error.404');
+    }
+    // for admin
+    public function adminUsers()
+    {
+        $users = User::getUsersForAdmin();
+        return view('admin.users', [
+            'users' => $users,
+        ]);
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function editUser()
     {
-        return view('home');
+        $userId = $_GET['id'];
+        $user = User::getUserForAdmin($userId);
+        $roles = Role::getAll();
+        return view('admin.edit-user', [
+            'user' => $user,
+            'roles' => $roles,
+        ]);
     }
-    public function userSessionStart()
+
+    public function submitEditUser()
     {
-        //session_start();
-        if (!isset($_SESSION['basket']['count'])) {
-            $_SESSION['basket'] = array(
-                'count' => 0,
-                'products' => array(),
-            );
+        // if not valid request
+        $validator = Validator::make($_POST, [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$_POST["user_id"],
+            'phone_number' => 'required|regex:/(380)[0-9]{9}/|unique:users,phone_number,'.$_POST["user_id"],
+        ]);
+        if($validator->fails()){
+            //return error
+            return redirect()->back()
+                            ->withErrors($validator);
         }
-    }
 
-    public function list()
-    {
-        $ProductRequest = Product::getAllWithTypes();
-        $ProductTypeRequest = ProductType::getAllTypes();
-        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"All"]);
-    }
+        $parameters = $_POST;
+        if (isset($parameters["send_email"])) { // send email to user about update
+            //generate random pass
+            $length = 8;
+            $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            $count = mb_strlen($chars);
 
-    public function listByType($productTypeName)
-    {
-        $ProductRequest = Product::getByType($productTypeName);
-        $ProductTypeRequest = ProductType::getAllTypes();
-        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>$productTypeName]);
-    }
-
-    public function addOne()
-    {
-        $json = $_GET['data'];
-        $productId = json_decode($json, true);
-        $_SESSION['basket']['products'][++$_SESSION['basket']['count']] = $productId;
-        var_dump($_SESSION);
-        return;
-    }
-
-    public function basket()
-    {   
-        $this->userSessionStart();
-        $models = array();
-        $summaryCostOfProducts = 0.00;
-        foreach ($_SESSION['basket']['products'] as $key => $productId) {
-            $summaryCostOfProducts += Product::getPriceById($productId);
-            $models[$key] = Product::getById($productId)[0];
-            $models[$key]->count = 1;
-        }
-        
-        return view('basket.list', 
-                [
-                    "userProducts"  => $models, 
-                    //"allQueries"    => $QueryRequest,
-                    "sumCost"       => $summaryCostOfProducts
-                ]);
-    }
-
-    public function deleteAllById(){
-        $userId = \Auth::id();
-        $json = $_GET['data'];
-        $productId = json_decode($json, true);
-        return Basket::deleteFromBasketInfo($userId, $productId);
-    }
-
-    public function deleteOne(){
-        $json = $_GET['data'];
-        $productId = json_decode($json, true);
-        foreach ($_SESSION['basket']['products'] as $key => $value) {
-            if ($value == $productId){
-                $value = 0;
-                break;
+            for ($i = 0, $pass = ''; $i < $length; $i++) {
+                $index = rand(0, $count - 1);
+                $pass .= mb_substr($chars, $index, 1);
             }
+            $this->sendUpdateEmail(User::getEmailById($parameters["user_id"]), $parameters["email"], $pass);
         }
-        return;
+        // update user in database
+        User::updateUser($parameters["user_id"], $parameters);
+        return redirect()->back()->with('success', ['update was success']);  
     }
-
-    public function delete()
-    {
-        $models = $_SESSION['basket'] = array(
-            'count' => 0,
-            'products' => array(),
-        );
-        return view('basket.list', 
-            [
-                "userProducts"  => $models, 
-                //"allQueries"    => $QueryRequest,
-                "sumCost"       => $summaryCostOfProducts
-            ]);
-    }
-
 }

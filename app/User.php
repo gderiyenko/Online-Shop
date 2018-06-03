@@ -30,15 +30,17 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function getRoleIdByUserId($userId)
+    public static function getRoleIdByUserId($userId)
     {
-        return \DB::select('SELECT role_id from users where users.id = ?', [$userId]);
+        return \DB::select('SELECT role_id from users where users.id = ?', [$userId])[0]->role_id;
     }
 
-    public function admin($userId)
+    public static function isAdmin($userId)
     {
-        echo $this->getRoleIdByUserId($userId);
-        die();
+        if (User::getRoleIdByUserId($userId) == 1)
+            return true;
+        else
+            return false;
     }
 
     public static function getEmailById($userId)
