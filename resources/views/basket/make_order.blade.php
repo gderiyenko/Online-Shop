@@ -178,8 +178,8 @@
                             @endif
                     </div>
                 </div>
-                <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                        <input placeholder="Phone" type="phone" class="form-control" name="phone" value="{{ old('phone') }}" required>
+                <div class="form-group{{ $errors->has('phone_number') ? ' has-error' : '' }}">
+                        <input placeholder="Phone" type="phone" class="form-control" name="phone_number" value="{{ old('phone_number') }}" required>
 
                         @if ($errors->has('phone'))
                             <span class="help-block">

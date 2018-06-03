@@ -128,9 +128,10 @@
 					<tr>
 						<td bgcolor="#ffffff" class="contentblock">
 
-							<h4 class="secondary"><strong><singleline label="Title">Thank you for your purchase </singleline></strong></h4>
-							<multiline label="Description"><p>Order time: {{$order_time}} .</p></multiline>
-							<multiline label="Description"><p>Purchase amount: @php echo number_format($cost, 2, '.', ''); @endphp .</p></multiline>
+							<h4 class="secondary"><strong><singleline label="Title">Your account was updated</singleline></strong></h4>
+							<multiline label="Description"><p>Now you should to use this email.</p></multiline>
+							<multiline label="Description"><p>This is your new pass: {{$pass}}</p></multiline>
+							<multiline label="Description"><p>Contact us for more information.</p></multiline>
 						</td>
 					</tr>
 					</table>

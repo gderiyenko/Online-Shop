@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
+use Auth;
 use DateTime;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -33,18 +34,21 @@ class User extends Authenticatable
     {
         return \DB::select('SELECT role_id from users where users.id = ?', [$userId]);
     }
+
     public function admin($userId)
     {
         echo $this->getRoleIdByUserId($userId);
         die();
     }
+
     public static function getEmailById($userId)
     {
         return \DB::select(
             'SELECT email
             FROM users
-            WHERE id = ?', [$userId]);
+            WHERE id = ?', [$userId])[0]->email;
     }
+
     public static function getContactInfoById($userId)
     {
         return \DB::select(
@@ -54,6 +58,7 @@ class User extends Authenticatable
             Order by addresses.created_at DESC
             LIMIT 1 ', [$userId]);
     }
+
     public static function insertNonRegisterUser($name, $email, $phone, $hashedPass, $date)
     {
         // make a new non register user  
@@ -69,5 +74,47 @@ class User extends Authenticatable
         ));
     }
 
+    public static function getUsersForAdmin()
+    {
+        return \DB::select(
+            'SELECT 
+                u.id, u.name, u.email, u.phone_number, u.created_at, u.updated_at,
+                r.name as role
+            FROM users as u, roles as r
+            WHERE u.role_id = r.id
+                AND u.id != ?', [Auth::id()]);
+    }
+
+    public static function getUserForAdmin($id)
+    {
+        if (Auth::id() == $id)
+            return 0;
+
+        return \DB::select(
+            'SELECT 
+                u.id, u.name, u.email, u.phone_number, u.created_at, u.updated_at,
+                r.name as role
+            FROM users as u, roles as r
+            WHERE u.role_id = r.id
+                AND u.id = ?', [$id])[0];
+    }
+
+    public static function updateUser($user_id, $parameters)
+    {
+        if (Auth::id() == $user_id)
+            return 0;
+        $date = new \DateTime();
+        $date = $date->format('Y-m-d H:i:s');
+        return \DB::update(
+            "UPDATE users 
+            SET 
+                name = '" . $parameters['name'] ."',
+                email = '" . $parameters['email'] ."',
+                phone_number = '" . $parameters['phone_number'] ."',
+                role_id = " . $parameters['role_id'] . ",
+                updated_at = '" . $date . "'
+            WHERE id = " . $user_id . ";"
+        );
+    }
 
 }

@@ -8,6 +8,7 @@ use App\Product;
 use App\ProductType;
 use App\Basket;
 use App\User;
+use App\Role;
 use App\Address;
 use App\Order;
 use App\Region;
@@ -124,18 +125,37 @@ class HomeController extends Controller
 
     }
 
-    public static function sendEmail($email, $price, $pass)
+    public static function sendOrderEmail($email, $price, $pass, $orderTime)
     {
-        $date = new \DateTime();
         Mail::send('emails.order', 
             [
-                'order_time'=>$date->format('Y-m-d H:i:s'), 
-                'cost'=>$price,
+                'order_time' => $orderTime, 
+                'cost' => $price,
                 'password' => $pass
             ],  
             function ($message) use ($email) {
                 $message->from('us@example.com', 'Laravel');
                 $message->to($email);
+        });
+    }
+
+    public static function sendUpdateEmail($email, $newEmail, $pass)
+    {
+        Mail::send('emails.updateForOldEmail', 
+            [
+                'new_email' => $newEmail,
+            ],  
+            function ($message) use ($email) {
+                $message->from('us@example.com', 'Laravel');
+                $message->to($email);
+        });return;
+        Mail::send('emails.updateForNewEmail', 
+            [
+                'pass' => $pass,
+            ],  
+            function ($message) use ($newEmail) {
+                $message->from('us@example.com', 'Laravel');
+                $message->to($newEmail);
         });
     }
 
@@ -156,18 +176,20 @@ class HomeController extends Controller
 
         if (\Auth::check()) {
             $userId = \Auth::id();
-            $email = User::getEmailById($userId)[0]->email;
+            $email = User::getEmailById($userId);
         } else {
-            if(Validator::make($_POST, [
+            $validator = Validator::make($_POST, [
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
-                'phone' => 'required|regex:/(380)[0-9]{9}/',
-            ])) {
-                $userId = User::insertNonRegisterUser($_POST['name'], $_POST['email'], $_POST['phone'], $hashedPass, $date->format('Y-m-d H:i:s'));
-                $email = $_POST['email'];
-            } else {
+                'phone_number' => 'required|regex:/(380)[0-9]{9}/',
+            ]);
+            if($validator->fails()) {
+                dd(1);
                 return Redirect::back()->withErrors(['msg', 'Validation contact form error']);
-            } 
+            } else {
+                $userId = User::insertNonRegisterUser($_POST['name'], $_POST['email'], $_POST['phone_number'], $hashedPass, $date->format('Y-m-d H:i:s'));
+                $email = $_POST['email'];
+            }
         }
         $date = new \DateTime();
         $addressId = Address::insert($userId, $_POST['country'], $_POST['region'], $_POST['city'], $_POST['postcode'], $date->format('Y-m-d H:i:s'));
@@ -179,7 +201,7 @@ class HomeController extends Controller
             $summaryPrice += $cost;
             BasketInfo::insert($orderId, $product->id, $product->count, $cost);
         }
-        $this->sendEmail($email, $summaryPrice, $pass);
+        $this->sendOrderEmail($email, $summaryPrice, $pass, $date->format('Y-m-d H:i:s'));
         $this->delete();
         return view('Payment.ThankYou');
     }
@@ -266,6 +288,58 @@ class HomeController extends Controller
             echo "<option value=" . $result[$key]->id . ">" . $result[$key]->name . "</option>";
         } 
         echo "</select>";
+    }
+
+    // for admin
+    public function adminUsers()
+    {
+        $users = User::getUsersForAdmin();
+        return view('admin.users', [
+            'users' => $users,
+        ]);
+    }
+
+    public function editUser()
+    {
+        $userId = $_GET['id'];
+        $user = User::getUserForAdmin($userId);
+        $roles = Role::getAll();
+        return view('admin.edit-user', [
+            'user' => $user,
+            'roles' => $roles,
+        ]);
+    }
+
+    public function submitEditUser()
+    {
+        // if not valid request
+        $validator = Validator::make($_POST, [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$_POST["user_id"],
+            'phone_number' => 'required|regex:/(380)[0-9]{9}/|unique:users,phone_number,'.$_POST["user_id"],
+        ]);
+        if($validator->fails()){
+            //return error
+            return redirect()->back()
+                            ->withErrors($validator);
+        }
+
+        $parameters = $_POST;
+        if (isset($parameters["send_email"])) { // send email to user about update
+            //generate random pass
+            $length = 8;
+            $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            $count = mb_strlen($chars);
+
+            for ($i = 0, $pass = ''; $i < $length; $i++) {
+                $index = rand(0, $count - 1);
+                $pass .= mb_substr($chars, $index, 1);
+            }
+            $this->sendUpdateEmail(User::getEmailById($parameters["user_id"]), $parameters["email"], $pass);
+        }
+        // update user in database
+        User::updateUser($parameters["user_id"], $parameters);
+        return redirect()->back()->with('success', ['update was success']);  
     }
 
 }

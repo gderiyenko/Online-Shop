@@ -7,6 +7,9 @@
         <meta charset="utf-8" />
         <meta content="" name="author" />
 
+        <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+        
+
         <link href="../assets/global/css/components-rounded.min.css" rel="stylesheet" id="style_components" type="text/css" />
         <link href="../assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
         <link href="../assets/global/css/stylee.bundle.css" rel="stylesheet" type="text/css" />
@@ -21,6 +24,8 @@
         <link href="../assets/layouts/layout4/css/themes/default.min.css" rel="stylesheet" type="text/css" id="style_color" />
         <link href="../assets/pages/css/login-2.min.css" rel="stylesheet" type="text/css" />
         <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css" rel="stylesheet" type="text/css" />
+        <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
         <link rel="shortcut icon" href="favicon.ico" />        
     
         <!-- Scripts -->
@@ -30,16 +35,9 @@
             ]); ?>
         </script>
     </head>
+
     <!-- END HEAD -->
 
-<!-- begin datatable -->
-        <script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
-        <!-- end datatable -->
         @yield('content')
     
 
@@ -105,5 +103,6 @@
                 });
             })
         </script>
+            <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 </body>
 </html>

@@ -45,13 +45,7 @@ Route::get('/home', function () {
 }); 
 
 Route::prefix('admin')->group(function () {
-
-    Route::get('users', function () {
-        // Matches The "/admin/users" URL
-        if (is_null(Auth::id())) {
-			return redirect('/404');
-	    }
-        return view('admin.app');
-    });
-
+    Route::get('users', 'HomeController@adminUsers');
+    Route::get('edit-user', 'HomeController@editUser');
+    Route::post('submit-edit-user', 'HomeController@submitEditUser');
 });
