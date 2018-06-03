@@ -46,6 +46,11 @@ class Controller extends BaseController
         */
     }
 
+    public static function sendUpdateOrderEmail()
+    {
+
+    }
+
     public static function sendUpdateEmail($email, $newEmail, $pass)
     {
     	/*

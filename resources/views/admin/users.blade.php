@@ -38,11 +38,11 @@
         <tfoot>
             <tr>
                 <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Age</th>
-                <th>Start date</th>
-                <th>Salary</th>
+                <th>Email</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Role</th>
+                <th>Edit</th>
             </tr>
         </tfoot>
     </table>

@@ -45,4 +45,30 @@ class LocationController extends Controller
         } 
         echo "</select>";
     }
+    // edit for Admin
+    public static function editRegion()
+    {
+        $country = intval($_GET['country']);
+        $result = Region::findRegionByCountry($country);
+
+        echo '<select name="region" class="form-control" onchange="getCity(this.value)" style="height: 34px" required>';
+        echo "<option value=''>Select State</option>";
+        foreach ($result as $key => $value)  { 
+            echo "<option value='" . $result[$key]->id . "'>" . $result[$key]->name . "</option>";
+        } 
+        echo "</select>";
+    }
+
+    public function editCity()
+    {
+        $region = intval($_GET['region']);
+        $result = Region::findCityByRegion($region);
+
+        echo '<select name="city" class="form-control" style="height: 34px" required>';
+        echo '<option value="">Select City</option>';
+        foreach ($result as $key => $value)  { 
+            echo "<option value='" . $result[$key]->id . "'>" . $result[$key]->name . "</option>";
+        } 
+        echo "</select>";
+    }
 }

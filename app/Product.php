@@ -70,10 +70,13 @@ class Product extends Model
 		);
 	}
 
-	public static function getByTemplate($templateId)
+	public static function orderInfoById($id)
 	{
-		$temp = \DB::select('SELECT p.*, ti.count, pt.name as type_name FROM products p, template_infos ti, product_types pt WHERE (ti.product_id = p.id) AND (ti.template_id = ?) AND (pt.id = p.type_id);', [$templateId]);
-		return $temp;
+		return \DB::select(
+			'SELECT p.*, pt.name as type_name
+			FROM products p
+			JOIN product_types pt on p.type_id = pt.id
+			WHERE p.id = ?', [$id])[0];
 	}
 
 	public function shopId()
