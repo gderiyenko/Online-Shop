@@ -1,7 +1,7 @@
 <?php
 
 use App\User;
-use App\Http\Middleware\Role;
+use App\Http\Middleware\Admin;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -45,22 +45,29 @@ Route::get('/home', function () {
     }
 }); 
 
-Route::get('/edit-region', 'LocationController@editRegion')->middleware('role');
+Route::get('/add-image',['as'=>'getimage','uses'=>'ImageController@getImage']);
+Route::post('/add-image',['as'=>'postimage','uses'=>'ImageController@postImage']);
+
+Route::get('/edit-region', 'LocationController@editRegion')->middleware('admin');
 Route::prefix('admin')->group(function () {
 
-    Route::get('users', 'AdminController@adminUsers')->middleware('role');
-    Route::get('edit-user', 'AdminController@editUser')->middleware('role');
-    Route::post('submit-edit-user', 'AdminController@submitEditUser')->middleware('role');
+    Route::get('users', 'AdminController@adminUsers')->middleware('admin');
+    Route::get('edit-user', 'AdminController@editUser')->middleware('admin');
+    Route::post('submit-edit-user', 'AdminController@submitEditUser')->middleware('admin');
 
-    Route::get('orders', 'AdminController@adminOrders')->middleware('role');
-    Route::get('edit-order', 'AdminController@editOrder')->middleware('role');
-    Route::post('submit-edit-order', 'AdminController@submitEditOrder')->middleware('role');
+    Route::get('orders', 'AdminController@adminOrders')->middleware('admin');
+    Route::get('edit-order', 'AdminController@editOrder')->middleware('admin');
+    Route::post('submit-edit-order', 'AdminController@submitEditOrder')->middleware('admin');
 
-    Route::get('sales', 'AdminController@adminSales')->middleware('role');
-    Route::get('edit-sale', 'AdminController@editSale')->middleware('role');
-    Route::post('submit-edit-sale', 'AdminController@submitEditSale')->middleware('role');
-    Route::get('add-sale', 'AdminController@addSale')->middleware('role');
-    Route::post('submit-add-sale', 'AdminController@submitAddSale')->middleware('role');
+    Route::get('products', 'AdminController@adminProducts')->middleware('admin');
+    Route::get('edit-product', 'AdminController@editProduct')->middleware('admin');
+    Route::post('submit-edit-product', 'AdminController@submitEditProduct')->middleware('admin');
+
+    Route::get('sales', 'AdminController@adminSales')->middleware('admin');
+    Route::get('edit-sale', 'AdminController@editSale')->middleware('admin');
+    Route::post('submit-edit-sale', 'AdminController@submitEditSale')->middleware('admin');
+    Route::get('add-sale', 'AdminController@addSale')->middleware('admin');
+    Route::post('submit-add-sale', 'AdminController@submitAddSale')->middleware('admin');
     
-	Route::get('/edit-city', 'LocationController@editCity')->middleware('role');
+	Route::get('/edit-city', 'LocationController@editCity')->middleware('admin');
 });

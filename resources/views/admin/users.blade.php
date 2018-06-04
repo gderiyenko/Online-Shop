@@ -28,8 +28,10 @@
 			    <td>{{$user->created_at}}</td>
 			    <td>{{$user->updated_at}}</td>
 			    <td>{{$user->role}}</td>
-			    <td><a href="/admin/edit-user?id={{$user->id}}" class="btn btn-outline btn-circle btn-sm purple">
-            <i class="fa fa-edit"></i> Edit </a></td>
+			    <td>@if ($user->role!='admin')
+                    <a href="/admin/edit-user?id={{$user->id}}" class="btn btn-outline btn-circle btn-sm purple">
+                    <i class="fa fa-edit"></i> Edit </a>
+                    @endif</td>
 			</tr>
 			@php
         		}

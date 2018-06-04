@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Hash;
 use Mail;
 use Auth;
+use Illuminate\Http\Request;
 use App\Product;
 use App\ProductType;
 use App\Basket;
 use App\User;
 use App\Role;
+use App\WeightType;
 use App\Sale;
 use App\Status;
 use App\Address;
@@ -179,6 +181,39 @@ class AdminController extends Controller
         // insert sale in database
         $newSaleId = Sale::insert($parameters);
         return redirect('/admin/edit-sale?id='.$newSaleId)->with('success', ['update was success']);  
+    }
+
+/* products */
+    public function adminProducts()
+    {
+        $products = Product::getProductsForAdmin();
+        return view('admin.products', [
+            'products' => $products,
+        ]);
+    }
+
+    public function editProduct()
+    {
+        $productId = $_GET['id'];
+        $product = Product::getProductForAdmin($productId);
+        $types = WeightType::getAll();
+
+        return view('admin.edit-product', [
+            'product' => $product,
+            'types' => $types,
+        ]);
+    }
+
+    public function submitEditProduct(Request $request)
+    {
+        $this->validate($request, [
+          'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        $parameters = $_POST;
+        dd($request['image']);
+        // update user in database
+        Product::updateProduct($parameters["product_id"], $parameters);
+        return redirect()->back()->with('success', ['update was success']);  
     }
 
 

@@ -25,7 +25,7 @@ class ListController extends Controller
     {
         $ProductRequest = Product::getAllWithTypes();
         $ProductTypeRequest = ProductType::getAllTypes();
-        if (User::isAdmin(Auth::id()))
+        if (Auth::check() && User::isAdmin(Auth::id()))
             $admin = true;
         else
             $admin = false;
@@ -36,7 +36,7 @@ class ListController extends Controller
     {
         $ProductRequest = Product::getByType($productTypeName);
         $ProductTypeRequest = ProductType::getAllTypes();
-        if (User::isAdmin(Auth::id()))
+        if (Auth::check() && User::isAdmin(Auth::id()))
             $admin = true;
         else
             $admin = false;
@@ -47,7 +47,7 @@ class ListController extends Controller
     {
         $ProductRequest = Product::getSales();
         $ProductTypeRequest = ProductType::getAllTypes();
-        if (User::isAdmin(Auth::id()))
+        if (Auth::check() && User::isAdmin(Auth::id()))
             $admin = true;
         else
             $admin = false;
@@ -59,7 +59,7 @@ class ListController extends Controller
         $findQuery = htmlspecialchars($_GET['findQuery']);
         $ProductRequest = Product::getByFind('*' . $findQuery . '*');
         $ProductTypeRequest = ProductType::getAllTypes();
-        if (User::isAdmin(Auth::id()))
+        if (Auth::check() && User::isAdmin(Auth::id()))
             $admin = true;
         else
             $admin = false;
@@ -70,7 +70,7 @@ class ListController extends Controller
         $productId = htmlspecialchars($_GET['id']);
         $ProductRequest = Product::getById($productId);
         $ProductTypeRequest = ProductType::getAllTypes();
-        if (User::isAdmin(Auth::id()))
+        if (Auth::check() && User::isAdmin(Auth::id()))
             $admin = true;
         else
             $admin = false;

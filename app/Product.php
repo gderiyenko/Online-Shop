@@ -105,4 +105,52 @@ class Product extends Model
 		else 
 			return $priceInfo[0]->sale_price;
 	}
+	/* for admin*/
+	public static function getProductsForAdmin()
+	{
+		return \DB::select(
+			'SELECT p.*, pt.name as type_name, s.price as sale_price, wt.name as weight_name
+			FROM products p
+			JOIN product_types pt on p.type_id = pt.id
+			JOIN weight_types wt on p.weight_type = wt.id
+			LEFT JOIN sales s on (s.product_id = p.id AND (NOW() BETWEEN s.date_from AND s.date_to))', []);
+	}
+	public static function getProductForAdmin($product_id)
+	{
+		return \DB::select(
+			'SELECT p.*, pt.name as type_name, s.price as sale_price, wt.name as weight_name
+			FROM products p
+			JOIN product_types pt on p.type_id = pt.id
+			JOIN weight_types wt on p.weight_type = wt.id
+			LEFT JOIN sales s on (s.product_id = p.id AND (NOW() BETWEEN s.date_from AND s.date_to))
+			WHERE p.id = ?', [$product_id])[0];
+	}
+	public static function updateProduct($product_id, $parameters)
+    {
+        $date = new \DateTime();
+        $date = $date->format('Y-m-d H:i:s');
+        \DB::update(
+            "UPDATE products
+            SET 
+                name = '" . $parameters['name'] ."',
+                price = '" . $parameters['price'] ."',
+                weight = '" . $parameters['weight'] ."',
+                weight_type = '" . $parameters['weight_type'] ."',
+                description = '" . $parameters['description'] ."',
+                updated_at = '" . $date . "'
+            WHERE id = " . $product_id . ";"
+        );
+    }
+    public static function updateImage($product_id, $path)
+    {
+        $date = new \DateTime();
+        $date = $date->format('Y-m-d H:i:s');
+        \DB::update(
+            "UPDATE products
+            SET 
+                img = '" . $path ."',
+                updated_at = '" . $date . "'
+            WHERE id = " . $product_id . ";"
+        );
+    }
 }

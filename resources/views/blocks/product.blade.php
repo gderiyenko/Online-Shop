@@ -34,7 +34,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="mt-overlay-3 mt-overlay-3-icons">
-                            <img src="../assets/pages/img/page_general_search/05.jpg">
+                            <img src="../assets/pages/img/page_general_search/{{$product->img}}">
                             <div class="mt-overlay">
                                 <h2>Overlay Title</h2>
                                 <ul class="mt-info">

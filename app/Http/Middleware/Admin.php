@@ -6,7 +6,7 @@ use Closure;
 use App\User;
 use Auth;
 
-class Role
+class Admin
 {
     /**
      * Handle an incoming request.

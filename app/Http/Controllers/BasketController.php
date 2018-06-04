@@ -89,6 +89,7 @@ class BasketController extends Controller
             $index = rand(0, $count - 1);
             $pass .= mb_substr($chars, $index, 1);
         }
+/*test*/$pass= "password";
         $hashedPass = Hash::make($pass);
 
         if (\Auth::check()) {
