@@ -7,7 +7,6 @@
 
 
 <div class="page-container">
-    <button style="right: 0;">Add Sale</button>
     <table id="example" class="mdl-data-table" style="width:100%">
         <thead>
             <tr>

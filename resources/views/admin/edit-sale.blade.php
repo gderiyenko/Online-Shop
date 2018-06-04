@@ -6,7 +6,7 @@
 
 
 <div class="page-container">
-
+<a href="/admin/sales" style="margin: 0 0 0 94%"> <i class="icon-back-arrow"></i>Back to Sales</a>
 @if ($errors->any())
     <div class="alert alert-danger">
         <ul>

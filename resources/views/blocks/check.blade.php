@@ -7,12 +7,7 @@
         @php
             echo number_format($product->weight * $product->count, 2, '.', '');
             if ($product->weight_type == 1)
-                echo " liter";
-            else
-            if ($product->weight_type == 2)
-                echo " kg.";
-            else
-                echo " gr.";
+                echo " " . $product->weight_type_name;
         @endphp </td>
     <td> 
         @php

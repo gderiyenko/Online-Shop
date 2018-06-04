@@ -6,6 +6,7 @@ use Hash;
 use Mail;
 use Auth;
 use Illuminate\Http\Request;
+use App\Http\Requests;
 use App\Product;
 use App\ProductType;
 use App\Basket;
@@ -29,6 +30,38 @@ class AdminController extends Controller
         $this->middleware('auth');
     }
 
+    public function check() {
+        if (Auth::check() && User::isAdmin(Auth::id())){
+         echo '<div class="btn-group">
+                        <button type="button" class="btn red-haze btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <span class="hidden-sm hidden-xs">Actions&nbsp;</span>
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="/admin/orders">
+                                    <i class="icon-docs"></i> Orders </a>
+                            </li>
+                            <li>
+                                <a href="/admin/users">
+                                    <i class="icon-tag"></i> Users </a>
+                            </li>
+                            <li>
+                                <a href="/admin/products">
+                                    <i class="icon-share"></i> Products </a>
+                            </li>
+                            <li class="divider"> </li>
+                            <li>
+                                <a href="/admin/sales">
+                                    <i class="icon-flag"></i> Sales
+                                </a>
+                            </li>
+                        </ul>
+                    </div>';
+        } else {
+            echo"";
+        }
+    }
 /* users */
     public function adminUsers()
     {
@@ -37,6 +70,7 @@ class AdminController extends Controller
             'users' => $users,
         ]);
     }
+    
 
     public function editUser()
     {
@@ -206,14 +240,13 @@ class AdminController extends Controller
 
     public function submitEditProduct(Request $request)
     {
-        $this->validate($request, [
-          'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
         $parameters = $_POST;
-        dd($request['image']);
         // update user in database
-        Product::updateProduct($parameters["product_id"], $parameters);
-        return redirect()->back()->with('success', ['update was success']);  
+        if(Product::updateProduct($parameters["product_id"], $parameters)) {
+            return redirect()->back()->with('success', ['update was success']);
+        } else {
+            return redirect()->back()->with('error', ['update was not success']);  
+        }
     }
 
 

@@ -69,11 +69,12 @@ class ListController extends Controller
     {
         $productId = htmlspecialchars($_GET['id']);
         $ProductRequest = Product::getById($productId);
+        $Others = Product::getAllWithTypes();
         $ProductTypeRequest = ProductType::getAllTypes();
         if (Auth::check() && User::isAdmin(Auth::id()))
             $admin = true;
         else
             $admin = false;
-        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"Find", "admin"=>$admin]);
+        return view('list-for-one', ["Product" => $ProductRequest[0], "allProducts"=>$Others, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"One", "admin"=>$admin]);
     }
 }

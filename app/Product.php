@@ -14,18 +14,20 @@ class Product extends Model
 	public static function getAllWithTypes()
 	{
 		return \DB::select(
-			'SELECT p.*, pt.name as type_name, s.price as sale_price
+			'SELECT p.*, pt.name as type_name, s.price as sale_price, wt.name as weight_type_name
 			FROM products p
 			JOIN product_types pt on p.type_id = pt.id
+			JOIN weight_types wt on p.weight_type = wt.id
 			LEFT JOIN sales s on (s.product_id = p.id AND (NOW() BETWEEN s.date_from AND s.date_to))');
 	}
 
 	public static function getById($productId)
 	{
 		return \DB::select(
-			'SELECT p.*, pt.name as type_name, s.price as sale_price
+			'SELECT p.*, pt.name as type_name, s.price as sale_price, wt.name as weight_type_name
 			FROM products p
 			JOIN product_types pt on p.type_id = pt.id
+			JOIN weight_types wt on p.weight_type = wt.id
 			LEFT JOIN sales s on (s.product_id = p.id AND (NOW() BETWEEN s.date_from AND s.date_to))
 			WHERE p.id = ?', [$productId]);
 	}
@@ -33,9 +35,10 @@ class Product extends Model
 	public static function getByType($typeName)
 	{
 		return \DB::select(
-			'SELECT p.*, pt.name as type_name, s.price as sale_price
+			'SELECT p.*, pt.name as type_name, s.price as sale_price, wt.name as weight_type_name
 			FROM products p
 			JOIN product_types pt on p.type_id = pt.id
+			JOIN weight_types wt on p.weight_type = wt.id
 			LEFT JOIN sales s on (s.product_id = p.id AND (NOW() BETWEEN s.date_from AND s.date_to))
 			WHERE p.type_id = pt.id AND pt.name = ?', [$typeName]);
 	}
@@ -43,9 +46,10 @@ class Product extends Model
 	public static function getSales() 
 	{
 		return \DB::select(
-			'SELECT p.*, pt.name as type_name, s.price as sale_price
+			'SELECT p.*, pt.name as type_name, s.price as sale_price, wt.name as weight_type_name
 			FROM products p
 			JOIN product_types pt on p.type_id = pt.id
+			JOIN weight_types wt on p.weight_type = wt.id
 			LEFT JOIN sales s on (s.product_id = p.id AND (NOW() BETWEEN s.date_from AND s.date_to))
 			WHERE s.price IS NOT NULL', []
 		);
@@ -54,9 +58,10 @@ class Product extends Model
 	public static function getByFind($findName)
 	{
 		return \DB::select(
-			'SELECT p.*, pt.name as type_name, s.price as sale_price
+			'SELECT p.*, pt.name as type_name, s.price as sale_price, wt.name as weight_type_name
 			FROM products p
 			JOIN product_types pt on p.type_id = pt.id
+			JOIN weight_types wt on p.weight_type = wt.id
 			LEFT JOIN sales s on (s.product_id = p.id AND (NOW() BETWEEN s.date_from AND s.date_to))
 			WHERE MATCH (p.name, p.description) AGAINST (?);', [$findName]
 		);
@@ -65,9 +70,10 @@ class Product extends Model
 	public static function orderInfoById($id)
 	{
 		return \DB::select(
-			'SELECT p.*, pt.name as type_name
+			'SELECT p.*, pt.name as type_name, wt.name as weight_type_name
 			FROM products p
 			JOIN product_types pt on p.type_id = pt.id
+			JOIN weight_types wt on p.weight_type = wt.id
 			WHERE p.id = ?', [$id])[0];
 	}
 
@@ -109,7 +115,7 @@ class Product extends Model
 	public static function getProductsForAdmin()
 	{
 		return \DB::select(
-			'SELECT p.*, pt.name as type_name, s.price as sale_price, wt.name as weight_name
+			'SELECT p.*, pt.name as type_name, s.price as sale_price, wt.name as weight_type_name
 			FROM products p
 			JOIN product_types pt on p.type_id = pt.id
 			JOIN weight_types wt on p.weight_type = wt.id
@@ -118,7 +124,7 @@ class Product extends Model
 	public static function getProductForAdmin($product_id)
 	{
 		return \DB::select(
-			'SELECT p.*, pt.name as type_name, s.price as sale_price, wt.name as weight_name
+			'SELECT p.*, pt.name as type_name, s.price as sale_price, wt.name as weight_type_name
 			FROM products p
 			JOIN product_types pt on p.type_id = pt.id
 			JOIN weight_types wt on p.weight_type = wt.id

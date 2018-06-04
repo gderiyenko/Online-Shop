@@ -35,6 +35,9 @@ Route::get('/orders', 'OrderController@list')->middleware('auth');
 Route::get('/find-region', 'LocationController@findRegion');
 Route::get('/find-city', 'LocationController@findCity');
 
+
+Route::get('/check-admin', 'AdminController@check');
+
 Route::view('/404', 'error.404');
 
 Route::get('/home', function () {
@@ -45,8 +48,8 @@ Route::get('/home', function () {
     }
 }); 
 
-Route::get('/add-image',['as'=>'getimage','uses'=>'ImageController@getImage']);
-Route::post('/add-image',['as'=>'postimage','uses'=>'ImageController@postImage']);
+Route::get('/add-image',['as'=>'getimage','uses'=>'ImageController@getImage'])->middleware('admin');
+Route::post('/add-image',['as'=>'postimage','uses'=>'ImageController@postImage'])->middleware('admin');
 
 Route::get('/edit-region', 'LocationController@editRegion')->middleware('admin');
 Route::prefix('admin')->group(function () {

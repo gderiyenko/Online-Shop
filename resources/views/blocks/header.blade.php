@@ -1,3 +1,5 @@
+
+
 <body class="page-container-bg-solid page-header-fixed page-sidebar-closed-hide-logo">
     <!-- BEGIN HEADER -->
         <div class="page-header navbar navbar-fixed-top">
@@ -14,42 +16,10 @@
                 <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a>
                 <!-- END RESPONSIVE MENU TOGGLER -->
                 <!-- BEGIN PAGE ACTIONS -->
-                <!-- DOC: Remove "hide" class to enable the page header actions 
-                <div class="page-actions">
-                    <div class="btn-group">
-                        <button type="button" class="btn red-haze btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                            <span class="hidden-sm hidden-xs">Actions&nbsp;</span>
-                            <i class="fa fa-angle-down"></i>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a href="javascript:;">
-                                    <i class="icon-docs"></i> New Post </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <i class="icon-tag"></i> New Comment </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <i class="icon-share"></i> Share </a>
-                            </li>
-                            <li class="divider"> </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <i class="icon-flag"></i> Comments
-                                    <span class="badge badge-success">4</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <i class="icon-users"></i> Feedbacks
-                                    <span class="badge badge-danger">2</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>-->
+                <!-- DOC: Remove "hide" class to enable the page header actions -->
+                <div id="admin-panel" class="page-actions">
+                    
+                </div>
                 <!-- END PAGE ACTIONS -->
                 <!-- BEGIN PAGE TOP -->
                 <div class="page-top">
@@ -207,7 +177,7 @@
                             </li>
                             @else
                             <li class="dropdown dropdown-user dropdown-dark">
-                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <a onclick="getMessage()" href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                     <span class="username username-hide-on-mobile"> @php if (isset(Auth::user()->name)) echo Auth::user()->name; @endphp </span>
                                     <!-- DOC: Do not remove below empty space(&nbsp;) as its purposely used -->
                                     <img alt="" class="img-circle" src="../assets/layouts/layout4/img/avatar9.jpg" /> </a>
@@ -251,3 +221,43 @@
         <!-- BEGIN HEADER & CONTENT DIVIDER -->
         <div class="clearfix"> </div>
         <!-- END HEADER & CONTENT DIVIDER -->
+
+ <script>
+    function getXMLHTTP() {
+           var x = false;
+           try {
+              x = new XMLHttpRequest();
+           }catch(e) {
+             try {
+                x = new ActiveXObject("Microsoft.XMLHTTP");
+             }catch(ex) {
+                try {
+                    req = new ActiveXObject("Msxml2.XMLHTTP");
+                }
+                catch(e1) {
+                    x = false;
+                }
+             }
+          }
+          return x;
+        }
+ function getMessage(){ console.log(1);
+
+     var req = getXMLHTTP();
+      
+      if (req) {
+       req.onreadystatechange = function() {
+        if (req.readyState == 4) {
+         // only if "OK"
+         if (req.status == 200) {      
+          document.getElementById('admin-panel').innerHTML=req.responseText;      
+         } else {
+          alert("Problem while using XMLHTTP:\n" + req.statusText);
+         }
+        }    
+       }   
+       req.open("GET", "/check-admin", true);
+       req.send(null);
+      }
+ }
+ </script>

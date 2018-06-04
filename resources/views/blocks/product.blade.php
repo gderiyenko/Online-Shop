@@ -46,7 +46,7 @@
                                     </li>
                                     @endif
                                     <li>
-                                        <a class="btn default btn-outline" href="javascript:;">
+                                        <a class="btn default btn-outline" href="/product?id={{$product->id}}">
                                             <i class="icon-magnifier"></i>
                                         </a>
                                     </li>

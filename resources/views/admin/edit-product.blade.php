@@ -69,7 +69,8 @@ req.send(null);
 </script>
 
 <div class="page-container">
-
+  <a href="/add-image?product_id={{$product->id}}"><div class="button">Change image</div></a>
+  <a href="/admin/products">Back to Products</a>
     @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
@@ -84,7 +85,6 @@ req.send(null);
         {{\Session::get('success')[0]}}
     </div>
     @endif
-    <a href="/add-image?product_id={{$product->id}}">Change image</a>
     <form role="form" method="POST" action="{{ url('/admin/submit-edit-product') }}">
         {{ csrf_field() }}
         <input type="hidden" class="form-control" name="product_id" value="{{$product->id}}">

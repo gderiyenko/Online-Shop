@@ -6,7 +6,7 @@
 
 
 <div class="page-container">
-
+<a href="/" style="margin: 0 0 0 94%"> <i class="icon-back-arrow"></i>Back to List</a>
 @if ($errors->any())
     <div class="alert alert-danger">
         <ul>

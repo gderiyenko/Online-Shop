@@ -28,7 +28,7 @@
         
         var strURL="/edit-region?country="+countryId;
       var req = getXMLHTTP();
-      if (req) {console.log(1);
+      if (req) {
        req.onreadystatechange = function() {
         if (req.readyState == 4) {
          // only if "OK"
@@ -69,7 +69,7 @@
 </script>
 
 <div class="page-container">
-
+<a href="/admin/orders" style="margin: 0 0 0 94%"> <i class="icon-back-arrow"></i>Back to Orders</a>
 @if ($errors->any())
     <div class="alert alert-danger">
         <ul>

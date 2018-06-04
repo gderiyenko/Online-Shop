@@ -25,7 +25,7 @@
                 <td><a href="/product?id={{$product->id}}">{{$product->name}}</a></td>
                 <td>{{$product->price}}</td>
                 <td>{{$product->type_name}}</td>
-                <td>{{$product->weight}} {{$product->weight_name}}</td>
+                <td>{{$product->weight}} {{$product->weight_type_name}}</td>
                 <td><a href="/admin/edit-product?id={{$product->id}}" class="btn btn-outline btn-circle btn-sm purple">
                     <i class="fa fa-edit"></i> Edit </a></td>
             </tr>

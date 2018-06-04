@@ -87,39 +87,15 @@
         
         <div class="info-card">
 	        <div class="right bottom">
-	        	<a onclick="showForm()">
-		            <button class="btn cyan" >
-		            	<i class="material-icons">assignment</i>
-		            	Create the template
-		            </button>
-	        	</a>
-
 	        	<button class="btn black" title="Delete this Basket" onclick ="DeleteBasket()">
 	            	<i class="material-icons">delete</i>
 	            	Delete All
 	            </button>
 	        </div>
 	    </div>
-        
-        <hr>
          @php
             $sumCost= $sumCost * 100;
         @endphp
-        
-        <div class="info-card">
-            <form action="/basket-buy" method="POST">
-                {{csrf_field()}}
-              <script
-                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                data-key="{{ config('services.stripe.key') }}"
-                data-amount="{{$sumCost}}"
-                data-name="Your Basket"
-                data-description="Widget"
-                data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-                data-locale="auto">
-              </script>
-            </form>
-        </div>
    </div>
 </div>
 @endsection
