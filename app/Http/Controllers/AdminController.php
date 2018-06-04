@@ -139,8 +139,9 @@ class AdminController extends Controller
         if ($findSale != null){
             return redirect('/admin/edit-sale?id='.$findSale);
         }
+        $product = Product::getById($product_id)[0];
         return view('admin.add-sale', [
-            'sale' => $sale,
+            'product' => $product,
         ]);
     }
 
@@ -160,11 +161,24 @@ class AdminController extends Controller
         $_POST["date_from"] .= ":00";
         $_POST["date_to"][10] = " ";
         $_POST["date_to"] .= ":00";
-        //dd($_POST);
+
         $parameters = $_POST;
         // update sale in database
         Sale::updateSale($parameters["sale_id"], $parameters);
         return redirect()->back()->with('success', ['update was success']);  
+    }
+
+    public function submitAddSale()
+    {
+        $_POST["date_from"][10] = " ";
+        $_POST["date_from"] .= ":00";
+        $_POST["date_to"][10] = " ";
+        $_POST["date_to"] .= ":00";
+
+        $parameters = $_POST;
+        // insert sale in database
+        $newSaleId = Sale::insert($parameters);
+        return redirect('/admin/edit-sale?id='.$newSaleId)->with('success', ['update was success']);  
     }
 
 

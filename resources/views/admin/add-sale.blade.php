@@ -21,28 +21,28 @@
             {{\Session::get('success')[0]}}
     </div>
 @endif
-    <form role="form" method="POST" action="{{ url('/admin/submit-edit-sale') }}">
+    <form role="form" method="POST" action="{{ url('/admin/submit-add-sale') }}">
         {{ csrf_field() }}
-        <input type="hidden" class="form-control" name="sale_id" value="{{$sale->id}}">
+        <input type="hidden" class="form-control" name="product_id" value="{{$product->id}}">
         <div class="form-group">
-            <label for="product">Name:</label>
-            <input type="text" class="form-control" name="product_name" value="{{$sale->product_name}}" readonly>
+            <label for="product_name">Name:</label>
+            <input type="text" class="form-control" name="product_name" value="{{$product->name}}" readonly>
         </div>
         <div class="form-group">
             <label for="date_from">From:</label>
-            <input type="datetime-local" class="form-control" name="date_from" value="{{$sale->from_date}}">
+            <input type="datetime-local" class="form-control" name="date_from">
         </div>
         <div class="form-group">
             <label for="date_to">To:</label>
-            <input type="datetime-local" class="form-control" name="date_to" value="{{$sale->to_date}}">
+            <input type="datetime-local" class="form-control" name="date_to">
         </div>
         <div class="form-group">
             <label for="product_price">Product price:</label>
-            <input type="number" class="form-control" name="product_price" value="{{$sale->product_price}}" readonly>
+            <input type="number" class="form-control" name="product_price" value="{{$product->price}}" readonly>
         </div>
         <div class="form-group">
             <label for="price">Sale price:</label>
-            <input type="integer" class="form-control" name="price" value="{{$sale->price}}" >
+            <input type="integer" class="form-control" name="price">
         </div>
         <input type="submit" value="Send Request">
     </form>

@@ -1,17 +1,23 @@
 <?php
 
 namespace App;
+
+use Auth;
 use Illuminate\Database\Eloquent\Model;
 
 
 class Sale extends Model
 {
-    public static function insert($userId, $addressId, $status, $date)
+    public static function insert($parameters)
     {
-        return \DB::table('orders')->insertGetId(array(
-            'user_id' => $userId,
-            'address_id' => $addressId,
-            'status_id' => $status,
+        $date = new \DateTime();
+        $date = $date->format('Y-m-d H:i:s');
+        return \DB::table('sales')->insertGetId(array(
+            'product_id' => $parameters["product_id"],
+            'price' => $parameters["price"],
+            'date_from' => $parameters["date_from"],
+            'date_to' => $parameters["date_to"],
+            'created_by' => Auth::id(),
             'created_at' => $date
         ));
     }
@@ -37,32 +43,15 @@ class Sale extends Model
 
     public static function findActiveSaleForProduct($product_id)
     {
-        return \DB::select(
+        $result = \DB::select(
             'SELECT s.id
             FROM sales as s
             WHERE (NOW() BETWEEN s.date_from AND s.date_to)
-                AND s.product_id = ?', [$product_id])[0]->id;
-    }
-
-    public static function getOrderForAdmin($order_id)
-    {
-        return \DB::select(
-            'SELECT 
-                o.*,
-                bs.name as status,
-                city.name as city, city.id as city_id,
-                region.name as region, region.id as region_id,
-                a.postcode,
-                u.name as user_name
-            FROM orders as o, baskets_statuses as bs, addresses as a, vd_city_lang as city, vd_region_lang as region, users as u
-            WHERE o.status_id = bs.id 
-                AND a.id = o.address_id
-                AND a.city_id = city.id
-                AND "en" = city.lang
-                AND a.region_id = region.id
-                AND "en" = region.lang
-                AND u.id = o.user_id
-                AND o.id = ?', [$order_id])[0];
+                AND s.product_id = ?', [$product_id]);
+        if (count($result) == 0)
+            return null;
+        else
+            return $result[0]->id;
     }
 
     public static function updateSale($sale_id, $parameters)
