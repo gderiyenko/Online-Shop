@@ -10,6 +10,7 @@ use App\ProductType;
 use App\Basket;
 use App\User;
 use App\Role;
+use App\Sale;
 use App\Status;
 use App\Address;
 use App\Order;
@@ -25,7 +26,8 @@ class AdminController extends Controller
     {
         $this->middleware('auth');
     }
-    // users
+
+/* users */
     public function adminUsers()
     {
         $users = User::getUsersForAdmin();
@@ -76,7 +78,8 @@ class AdminController extends Controller
         User::updateUser($parameters["user_id"], $parameters);
         return redirect()->back()->with('success', ['update was success']);  
     }
-    // orders
+
+/* orders */
     public function adminOrders()
     {
         $orders = Order::getOrdersForAdmin();
@@ -119,5 +122,50 @@ class AdminController extends Controller
         Order::updateOrder($parameters["order_id"], $parameters);
         return redirect()->back()->with('success', ['update was success']);  
     }
+
+/* sales */
+    public function adminSales()
+    {
+        $sales = Sale::getSalesForAdmin();
+        return view('admin.sales', [
+            'sales' => $sales,
+        ]);
+    }
+
+    public function addSale()
+    {
+        $product_id = $_GET['product_id'];
+        $findSale = Sale::findActiveSaleForProduct($product_id);
+        if ($findSale != null){
+            return redirect('/admin/edit-sale?id='.$findSale);
+        }
+        return view('admin.add-sale', [
+            'sale' => $sale,
+        ]);
+    }
+
+    public function editSale()
+    {
+        $saleId = $_GET['id'];
+        $sale = Sale::getSaleForAdmin($saleId);
+        //dd($sale);
+        return view('admin.edit-sale', [
+            'sale' => $sale,
+        ]);
+    }
+
+    public function submitEditSale()
+    {
+        $_POST["date_from"][10] = " ";
+        $_POST["date_from"] .= ":00";
+        $_POST["date_to"][10] = " ";
+        $_POST["date_to"] .= ":00";
+        //dd($_POST);
+        $parameters = $_POST;
+        // update sale in database
+        Sale::updateSale($parameters["sale_id"], $parameters);
+        return redirect()->back()->with('success', ['update was success']);  
+    }
+
 
 }

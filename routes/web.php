@@ -47,12 +47,20 @@ Route::get('/home', function () {
 
 Route::get('/edit-region', 'LocationController@editRegion')->middleware('role');
 Route::prefix('admin')->group(function () {
+
     Route::get('users', 'AdminController@adminUsers')->middleware('role');
     Route::get('edit-user', 'AdminController@editUser')->middleware('role');
     Route::post('submit-edit-user', 'AdminController@submitEditUser')->middleware('role');
+
     Route::get('orders', 'AdminController@adminOrders')->middleware('role');
     Route::get('edit-order', 'AdminController@editOrder')->middleware('role');
     Route::post('submit-edit-order', 'AdminController@submitEditOrder')->middleware('role');
+
+    Route::get('sales', 'AdminController@adminSales')->middleware('role');
+    Route::get('edit-sale', 'AdminController@editSale')->middleware('role');
+    Route::post('submit-edit-sale', 'AdminController@submitEditSale')->middleware('role');
+    Route::get('add-sale', 'AdminController@addSale')->middleware('role');
+    Route::post('submit-add-sale', 'AdminController@submitAddSale')->middleware('role');
     
 	Route::get('/edit-city', 'LocationController@editCity')->middleware('role');
 });

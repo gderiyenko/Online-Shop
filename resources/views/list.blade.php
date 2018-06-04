@@ -13,46 +13,12 @@
 
 @section('content')
 
- @include('blocks.header')
+@include('blocks.header')
+
 
 <div class="page-container">
-
-    <!-- left panel -->
-    <div class="page-sidebar-wrapper" style="position : fixed;">
-        <div class="page-sidebar navbar-collapse collapse">
-            <ul class="page-sidebar-menu">
-                @php
-                    if ($thisType == "All"){
-                @endphp
-                    <li class="nav-item"><a href=" {{ url('/list') }} ">All</a></li>
-                @php
-                    }else{
-                @endphp
-                    <li class="nav-item"><a href=" {{ url('/list') }} ">All</a></li>
-                @php
-                    }
-                @endphp
-
-                <li class="nav-item"><a href="{{url('/list/sale')}}">Sale</a></li>
-                <li class="heading">
-                    <h3 class="uppercase">Types</h3>
-                </li>
-                @php 
-                    foreach($allProductTypes as $type)
-                    if ($type->name == $thisType){
-                @endphp
-                    <li class="nav-item"><a href="\list\{{$type->name}}"> {{$type->name}} </a></li>
-                @php
-                    }else{
-                @endphp
-                    <li class="nav-item"><a href="\list\{{$type->name}}"> {{$type->name}} </a></li>
-                @php
-                    }
-                @endphp
-            </ul>
-        </div>
-    </div>
-
+    
+    @include('blocks.sidebar')
     <!-- Zone -->
     <div class="page-content-wrapper">
         <div class="page-content" style="min-height: 1195px;">

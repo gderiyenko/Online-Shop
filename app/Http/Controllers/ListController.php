@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Hash;
 use Mail;
+use Auth;
 use App\Product;
 use App\ProductType;
 use App\Basket;
@@ -24,21 +25,33 @@ class ListController extends Controller
     {
         $ProductRequest = Product::getAllWithTypes();
         $ProductTypeRequest = ProductType::getAllTypes();
-        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"All"]);
+        if (User::isAdmin(Auth::id()))
+            $admin = true;
+        else
+            $admin = false;
+        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"All", "admin"=>$admin]);
     }
 
     public function listByType($productTypeName)
     {
         $ProductRequest = Product::getByType($productTypeName);
         $ProductTypeRequest = ProductType::getAllTypes();
-        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>$productTypeName]);
+        if (User::isAdmin(Auth::id()))
+            $admin = true;
+        else
+            $admin = false;
+        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>$productTypeName, "admin"=>$admin]);
     }
     
     public function listSale()
     {
         $ProductRequest = Product::getSales();
         $ProductTypeRequest = ProductType::getAllTypes();
-        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"Sale"]);
+        if (User::isAdmin(Auth::id()))
+            $admin = true;
+        else
+            $admin = false;
+        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"Sale", "admin"=>$admin]);
     }
 
     public function listByFind()
@@ -46,6 +59,21 @@ class ListController extends Controller
         $findQuery = htmlspecialchars($_GET['findQuery']);
         $ProductRequest = Product::getByFind('*' . $findQuery . '*');
         $ProductTypeRequest = ProductType::getAllTypes();
-        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"Find"]);
+        if (User::isAdmin(Auth::id()))
+            $admin = true;
+        else
+            $admin = false;
+        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"Find", "admin"=>$admin]);
+    }
+    public function listForOne()
+    {
+        $productId = htmlspecialchars($_GET['id']);
+        $ProductRequest = Product::getById($productId);
+        $ProductTypeRequest = ProductType::getAllTypes();
+        if (User::isAdmin(Auth::id()))
+            $admin = true;
+        else
+            $admin = false;
+        return view('list', ["allProducts" => $ProductRequest, "allProductTypes"=>$ProductTypeRequest, "thisType"=>"Find", "admin"=>$admin]);
     }
 }

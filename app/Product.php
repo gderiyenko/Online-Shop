@@ -43,19 +43,11 @@ class Product extends Model
 	public static function getSales() 
 	{
 		return \DB::select(
-			'SELECT 
-			s.price as sale_price,
-			s.date_to as sale_ends,
-			p.*,
-			pt.name as type_name
-			FROM 
-			sales s,
-			products p,
-			product_types pt
-			WHERE
-			s.product_id = p.id
-			AND p.type_id = pt.id
-			'
+			'SELECT p.*, pt.name as type_name, s.price as sale_price
+			FROM products p
+			JOIN product_types pt on p.type_id = pt.id
+			LEFT JOIN sales s on (s.product_id = p.id AND (NOW() BETWEEN s.date_from AND s.date_to))
+			WHERE s.price IS NOT NULL', []
 		);
 	}
 

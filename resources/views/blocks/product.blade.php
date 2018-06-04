@@ -38,6 +38,13 @@
                             <div class="mt-overlay">
                                 <h2>Overlay Title</h2>
                                 <ul class="mt-info">
+                                    @if ($admin)
+                                    <li>
+                                        <a class="btn default btn-outline" href="/admin/add-sale?product_id={{$product->id}}">
+                                            <i class="icon-star"></i>
+                                        </a>
+                                    </li>
+                                    @endif
                                     <li>
                                         <a class="btn default btn-outline" href="javascript:;">
                                             <i class="icon-magnifier"></i>
