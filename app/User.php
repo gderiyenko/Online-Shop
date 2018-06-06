@@ -43,6 +43,29 @@ class User extends Authenticatable
             return false;
     }
 
+    public static function kurs()
+    {
+        return \DB::select(
+            'SELECT test.name, test.kurs
+            from(
+                SELECT
+                    u.*,
+                    SUM(bi.cost) AS kurs
+                FROM
+                    users AS u,
+                    orders AS o,
+                    baskets_info AS bi
+                WHERE
+                    u.id = o.user_id
+                AND bi.order_id = o.id
+                GROUP BY
+                    u.id
+                ) as test
+            where test.role_id != 1
+            and test.role_id != 3
+            order by kurs asc;', []);
+    }
+
     public static function getEmailById($userId)
     {
         return \DB::select(

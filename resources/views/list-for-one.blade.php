@@ -77,7 +77,7 @@
                                         <div class="mt-overlay-3 mt-overlay-3-icons">
                                             <img src="../assets/pages/img/page_general_search/{{$Product->img}}">
                                             <div class="mt-overlay">
-                                                <h2>Overlay Title</h2>
+                                                <h2>{{$Product->type_name}}</h2>
                                                 <ul class="mt-info">
                                                     @if ($admin)
                                                     <li>

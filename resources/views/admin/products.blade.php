@@ -7,6 +7,7 @@
 
 
 <div class="page-container">
+    <a href="/admin/add-product">Add</a>
     <table id="example" class="mdl-data-table" style="width:100%">
         <thead>
             <tr>

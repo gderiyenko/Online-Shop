@@ -63,8 +63,12 @@ Route::prefix('admin')->group(function () {
     Route::post('submit-edit-order', 'AdminController@submitEditOrder')->middleware('admin');
 
     Route::get('products', 'AdminController@adminProducts')->middleware('admin');
+    Route::get('add-product', 'AdminController@addProduct')->middleware('admin');
     Route::get('edit-product', 'AdminController@editProduct')->middleware('admin');
     Route::post('submit-edit-product', 'AdminController@submitEditProduct')->middleware('admin');
+    Route::post('submit-add-product', 'AdminController@submitAddProduct')->middleware('admin');
+
+    Route::get('kurs', 'AdminController@kurs')->middleware('admin');
 
     Route::get('sales', 'AdminController@adminSales')->middleware('admin');
     Route::get('edit-sale', 'AdminController@editSale')->middleware('admin');

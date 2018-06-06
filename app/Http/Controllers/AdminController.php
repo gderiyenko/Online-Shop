@@ -226,6 +226,32 @@ class AdminController extends Controller
         ]);
     }
 
+    public function addProduct()
+    {
+        $types = WeightType::getAll();
+        $product_types = ProductType::getAllTypes();
+        return view('admin.add-product', [
+            'types' => $types,
+            'product_types' => $product_types,
+        ]);
+    }
+
+    public function  kurs(){
+        $result = User::kurs();
+        //dd($result);
+        return view('admin.kurs',['users'=>$result]);
+    }
+    public function  submitAddProduct()
+    {
+        $parameters = $_POST;
+        // add user in database
+        if(Product::insert($parameters)) {
+            return redirect()->back()->with('success', ['update was success']);
+        } else {
+            return redirect()->back()->with('error', ['update was not success']);  
+        }
+    }
+
     public function editProduct()
     {
         $productId = $_GET['id'];

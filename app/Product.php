@@ -32,6 +32,19 @@ class Product extends Model
 			WHERE p.id = ?', [$productId]);
 	}
 
+	public static function insert($parameters)
+    {
+        return \DB::table('products')->insertGetId(array(
+            "name" => $parameters["name"],
+            "price" => $parameters["price"],
+            "weight" => $parameters["weight"],
+            "weight_type" => $parameters["weight_type"],
+            "description" => $parameters["description"],
+            "img" => "/",
+            "type_id" => $parameters["type_id"]
+        ));
+    }
+
 	public static function getByType($typeName)
 	{
 		return \DB::select(

@@ -23,7 +23,8 @@ class OrderController extends Controller
     public function list()
     {
         $orders = Order::getAllList(Auth::id());
-        
+        if (count($orders) == 0)
+            return redirect()->back();
         foreach ($orders as $key => $order) {
             $Summary[$order->id] = 0.00;
             $products[$order->id] = BasketInfo::getByOrderId($order->id);
